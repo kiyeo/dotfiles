@@ -3,7 +3,7 @@
 	email = leojkeo@users.noreply.github.com
 [credential]
 	helper = manager-core
-	helper = 
 	helper = /usr/bin/git-credential-manager-core
+	credentialStore = cache
 [credential "https://dev.azure.com"]
 	useHttpPath = true
