@@ -100,8 +100,6 @@ if autoload -U +X add-zle-hook-widget 2>/dev/null; then
     add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_highlight_apply
 fi
 
-CURRENT_DIR=$(cd "$(dirname $0)" && pwd)
-
 source ~/.zsh/aliases.zsh
 
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
