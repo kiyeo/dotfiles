@@ -9,23 +9,23 @@ function git_branch_name()
   if [[ $branch != "" ]]; then
     count_unstaged="$(git diff --name-only 2> /dev/null | grep -c "")"
     if [[ $count_unstaged -gt 0 ]]; then
-      count_unstaged="%B%F{red}~$count_unstaged%F{#00afff}%b"
+      count_unstaged="%B%F{red}~$count_unstaged%f%b"
     fi
     count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c "")"
     if [[ $count_staged -gt 0 ]]; then
-      count_staged="%F{#87af5f}+$count_staged%F{#00afff}"
+      count_staged="%F{#87af5f}+$count_staged%f"
     fi
     count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c "")"
     if [[ $count_untracked -gt 0 ]]; then
-      count_untracked="%B%F{red}~$count_untracked%F{#00afff}%b"
+      count_untracked="%B%F{red}~$count_untracked%f%b"
     fi
     count_unpushed="$(git cherry -v 2> /dev/null | grep -c "")"
     if [[ $count_unpushed -gt 0 ]]; then
-      count_unpushed=" %F{#87af5f}+$count_unpushed%F{#00afff} |"
+      count_unpushed=" %F{#87af5f}+$count_unpushed%f |"
     else
       count_unpushed=""
     fi
-    echo " ($branch$count_unpushed $count_staged $count_unstaged $count_untracked)"
+    echo " ($branch$count_unpushed $count_staged $count_unstaged $count_untracked)%F{black}'$'\uE0B0''%f"
   fi
 }
 
@@ -35,7 +35,7 @@ setopt prompt_subst
 
 # Enable colors and change prompt:
 autoload colors && colors
-prompt='%F{#87af5f}%n %U%F{#00afff}%~%u$(git_branch_name) '
+prompt='%F{#87af5f}%n%f %F{white}%K{#00afff}%~%k%f%F{#00afff}'$'\uE0B0''%f$(git_branch_name) '
 
 # Turn off all beeps
 unsetopt BEEP
@@ -99,6 +99,8 @@ if autoload -U +X add-zle-hook-widget 2>/dev/null; then
     add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_fetch
     add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_highlight_apply
 fi
+
+source /etc/zsh_command_not_found
 
 source ~/.zsh/aliases.zsh
 
