@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+
 COLORTERM=truecolor
 
 # Find and set branch name var if in git repository.
