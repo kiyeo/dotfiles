@@ -6,12 +6,17 @@ sudo apt install zsh &&
   git clone https://github.com/Kiyeo/dotfiles.git &&
   cd dotfiles &&
   git submodule update --init --recursive &&
-  stow * &&
+  stow */ &&
   zsh
 ```
 ## submodule updates
 ```
 git submodule update --recursive --remote
+```
+## uninstall dotfiles
+```
+cd dotfiles &&
+  stow -D */
 ```
 ## Clipboard
 In init.vim or .vimrc put set `clipboard=unnamedplus`.
