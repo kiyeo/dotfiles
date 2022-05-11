@@ -16,22 +16,38 @@ packer.init({
 packer.startup({
   function(use)
     use 'wbthomason/packer.nvim'
+
+    -- colorscheme
+    use 'w0ng/vim-hybrid'
+
+    -- completion
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+
+    -- language server protocol
     use {
       'williamboman/nvim-lsp-installer',
       'neovim/nvim-lspconfig'
     }
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'tpope/vim-commentary'
-    use 'mhartington/formatter.nvim'
-    use 'kassio/neoterm'
+
+    -- fuzzy finder
     use {
       'nvim-telescope/telescope.nvim',
       requires = { {'nvim-lua/plenary.nvim'} }
     }
+
+    -- highlighter
+    use {
+      'nvim-treesitter/nvim-treesitter',
+      run = ':TSUpdate'
+    }
+
+    use 'tpope/vim-commentary'
+    use 'mhartington/formatter.nvim'
+    use 'kassio/neoterm'
     use 'lewis6991/gitsigns.nvim'
     use 'mfussenegger/nvim-dap'
-    use 'w0ng/vim-hybrid'
+
     if packer_bootstrap then
       packer.sync()
     end

@@ -9,5 +9,3 @@ vim.opt.number = true -- line numbering
 
 vim.opt.ignorecase = true -- search insensitive
 vim.opt.smartcase = true -- except when inputting uppercase letters
-
-vim.g.colors_name = 'hybrid'
