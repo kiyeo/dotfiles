@@ -1,13 +1,27 @@
-vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:Ttoggle<CR>', {desc = 'neoterm - Press Ctrl + q to toggle terminal'})
+local M = {}
 
-vim.keymap.set('n', '<Leader>F', ':Format<CR>', {desc = 'formatter.nvim - Press "' .. vim.g.mapleader .. '" + F to format file'})
+function M.nvim_lspconfig()
+  vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, {desc = 'nvim-lspconfig - Press g + d to goto definition'})
+  vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, {desc = 'nvim-lspconfig - Press g + i to goto implementation'})
+  vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, {desc = 'nvim-lspconfig - Press g + h to goto reference'})
+  vim.keymap.set('n', 'gh', function() vim.lsp.buf.hover() end, {desc = 'nvim-lspconfig - Press g + h to hover'})
+  vim.keymap.set('n', '<Leader>rn', function() vim.lsp.buf.rename() end, {desc = 'nvim-lspconfig - Press "' .. vim.g.mapleader .. '" + r + n to rename'})
+end
 
-vim.keymap.set({'n', 'v'}, '<C-_>', ':Commentary<CR>', {desc = 'vim-commentary - Press Ctrl + / to comment line/selection'})
+function M.telescope()
+  vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+end
 
-vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+function M.formatter_nvim()
+  vim.keymap.set('n', '<Leader>F', ':Format<CR>', {desc = 'formatter.nvim - Press "' .. vim.g.mapleader .. '" + F to format file'})
+end
 
-vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, {desc = 'nvim-lspconfig - Press g + d to goto definition'})
-vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end, {desc = 'nvim-lspconfig - Press g + i to goto implementation'})
-vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end, {desc = 'nvim-lspconfig - Press g + h to goto reference'})
-vim.keymap.set('n', 'gh', function() vim.lsp.buf.hover() end, {desc = 'nvim-lspconfig - Press g + h to hover'})
-vim.keymap.set('n', '<Leader>rn', function() vim.lsp.buf.rename() end, {desc = 'nvim-lspconfig - Press "' .. vim.g.mapleader .. '" + r + n to rename'})
+function M.vim_commentary()
+  vim.keymap.set({'n', 'v'}, '<C-_>', ':Commentary<CR>', {desc = 'vim-commentary - Press Ctrl + / to comment line/selection'})
+end
+
+function M.neoterm()
+  vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:Ttoggle<CR>', {desc = 'neoterm - Press Ctrl + q to toggle terminal'})
+end
+
+return M

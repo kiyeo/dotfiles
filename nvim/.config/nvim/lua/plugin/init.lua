@@ -18,11 +18,7 @@ packer.startup({
     use 'wbthomason/packer.nvim'
 
     -- colorscheme
-    use 'w0ng/vim-hybrid'
-
-    -- completion
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
+    use 'glepnir/zephyr-nvim'
 
     -- language server protocol
     use {
@@ -30,23 +26,27 @@ packer.startup({
       'neovim/nvim-lspconfig'
     }
 
+    -- completion
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+
     -- fuzzy finder
     use {
       'nvim-telescope/telescope.nvim',
       requires = { {'nvim-lua/plenary.nvim'} }
     }
 
-    -- highlighter
+    -- parser generator tool and an incremental parsing library
     use {
       'nvim-treesitter/nvim-treesitter',
       run = ':TSUpdate'
     }
 
-    use 'tpope/vim-commentary'
     use 'mhartington/formatter.nvim'
-    use 'kassio/neoterm'
     use 'lewis6991/gitsigns.nvim'
     use 'mfussenegger/nvim-dap'
+    use 'tpope/vim-commentary'
+    use 'kassio/neoterm'
 
     if packer_bootstrap then
       packer.sync()
@@ -59,4 +59,3 @@ packer.startup({
 
 vim.cmd('source ' .. config_compile_path)
 require 'plugin.settings'
-require 'plugin.mappings'
