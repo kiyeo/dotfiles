@@ -1,8 +1,23 @@
 local mappings = require('plugin.mappings')
 
-local colorscheme_plugin = packer_plugins['zephyr-nvim']
+local colorscheme_plugin = packer_plugins['onenord.nvim']
 if colorscheme_plugin and colorscheme_plugin.loaded then
-  require('zephyr')
+  require('onenord').setup {}
+end
+
+local nvim_cmp_plugin = packer_plugins['nvim-cmp']
+if nvim_cmp_plugin and nvim_cmp_plugin.loaded then
+  require("cmp").setup {
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = mappings.nvim_cmp(),
+    sources = {
+      { name = 'nvim_lsp' }
+    },
+  }
 end
 
 local installed_languages = {}

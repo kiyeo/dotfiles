@@ -18,7 +18,8 @@ packer.startup({
     use 'wbthomason/packer.nvim'
 
     -- colorscheme
-    use 'glepnir/zephyr-nvim'
+    -- use 'glepnir/zephyr-nvim'
+    use 'rmehri01/onenord.nvim'
 
     -- language server protocol
     use {
@@ -26,9 +27,13 @@ packer.startup({
       'neovim/nvim-lspconfig'
     }
 
+    -- snippet engine
+    use 'L3MON4D3/LuaSnip'
+
     -- completion
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-nvim-lsp'
+    use 'saadparwaiz1/cmp_luasnip'
 
     -- fuzzy finder
     use {
