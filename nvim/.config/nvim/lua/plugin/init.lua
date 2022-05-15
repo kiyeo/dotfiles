@@ -65,5 +65,11 @@ packer.startup({
   }
 })
 
-vim.cmd('source ' .. config_compile_path)
-require 'plugin.settings'
+if not pcall(
+  function ()
+    vim.cmd('source ' .. config_compile_path)
+    require 'plugin.settings'
+  end
+) then
+  print('Packer not installed. Run :PackerCompile and :PackerInstall')
+end
