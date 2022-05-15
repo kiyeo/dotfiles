@@ -1,12 +1,13 @@
 local mappings = require('plugin.mappings')
 
-local colorscheme_plugin = packer_plugins['onenord.nvim']
-if colorscheme_plugin and colorscheme_plugin.loaded then
-  require('onenord').setup {}
+local is_colorscheme, colorscheme_plugin = pcall(require, 'onenord')
+if is_colorscheme then
+  colorscheme_plugin.setup {}
 end
 
-local nvim_cmp_plugin = packer_plugins['nvim-cmp']
-if nvim_cmp_plugin and nvim_cmp_plugin.loaded then
+local is_cmp, cmp = pcall(require, 'cmp')
+local is_luasnip, luasnip = pcall(require, 'luasnip')
+if is_cmp and is_luasnip then
   local kind_icons = {
     Text = "",
     Method = "m",
@@ -35,14 +36,14 @@ if nvim_cmp_plugin and nvim_cmp_plugin.loaded then
     TypeParameter = "",
   }
 
-  require("cmp").setup {
+  cmp.setup {
     snippet = {
       expand = function(args)
-        require('luasnip').lsp_expand(args.body)
+        luasnip.lsp_expand(args.body)
       end,
     },
     window = {
-      documentation = require("cmp").config.window.bordered()
+      documentation = cmp.config.window.bordered()
     },
     mapping = mappings.nvim_cmp(),
     formatting = {
@@ -69,37 +70,40 @@ if nvim_cmp_plugin and nvim_cmp_plugin.loaded then
 end
 
 local installed_languages = {}
-local nvim_lsp_installer_plugin = packer_plugins['nvim-lsp-installer']
-local nvim_lspconfig_plugin = packer_plugins['nvim-lspconfig']
-if nvim_lsp_installer_plugin and nvim_lsp_installer_plugin.loaded and nvim_lspconfig_plugin and nvim_lspconfig_plugin.loaded then
-  require('nvim-lsp-installer').setup {}
-  local installed_servers = require('nvim-lsp-installer').get_installed_servers()
+local is_nvim_lsp_installer, nvim_lsp_installer = pcall(require, 'nvim-lsp-installer')
+local is_lspconfig, lspconfig = pcall(require, 'lspconfig')
+local is_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+if is_nvim_lsp_installer then
+  nvim_lsp_installer.setup {}
+  local installed_servers = nvim_lsp_installer.get_installed_servers()
   for _, installed_server in pairs(installed_servers) do
     for _, language in pairs(installed_server.languages) do
       table.insert(installed_languages, language)
     end
-    require('lspconfig')[installed_server.name].setup {
-      capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    }
+    if is_lspconfig and is_cmp_nvim_lsp then
+      lspconfig[installed_server.name].setup {
+        capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+      }
 
-    if installed_server.name == 'sumneko_lua' then
-      require('lspconfig')[installed_server.name].setup {
-        on_attach = mappings.nvim_lspconfig(),
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { 'vim', 'packer_plugins' }
+      if installed_server.name == 'sumneko_lua' then
+        lspconfig[installed_server.name].setup {
+          on_attach = mappings.nvim_lspconfig(),
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { 'vim', 'packer_plugins' }
+              }
             }
           }
         }
-      }
+      end
     end
   end
 end
 
-local telescope_plugin = packer_plugins['telescope.nvim']
-if telescope_plugin and telescope_plugin.loaded then
-  require("telescope").setup {
+local is_telescope, telescope = pcall(require, 'telescope')
+if is_telescope then
+  telescope.setup {
     on_attach = mappings.telescope(),
     pickers = {
       find_files = {
@@ -109,9 +113,9 @@ if telescope_plugin and telescope_plugin.loaded then
   }
 end
 
-local treesitter_plugin = packer_plugins['nvim-treesitter']
-if treesitter_plugin and treesitter_plugin.loaded then
-  require('nvim-treesitter.configs').setup {
+local is_nvim_treesitter_configs, nvim_treesitter_configs = pcall(require, 'nvim-treesitter.configs')
+if is_nvim_treesitter_configs then
+  nvim_treesitter_configs.setup {
     ensure_installed = installed_languages,
     highlight = {
       enable = true
@@ -122,20 +126,23 @@ if treesitter_plugin and treesitter_plugin.loaded then
   }
 end
 
-local formatter_plugin = packer_plugins['formatter.nvim']
-if formatter_plugin and formatter_plugin.loaded then
-  require('formatter').setup {
+local is_formatter, formatter = pcall(require, 'formatter')
+if is_formatter then
+  formatter.setup {
     on_attach = mappings.formatter_nvim()
   }
 end
 
-local gitsigns_plugin = packer_plugins['gitsigns.nvim']
-if gitsigns_plugin and gitsigns_plugin.loaded then
-  require('gitsigns').setup {}
+local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
+if is_gitsigns then
+  gitsigns.setup {}
 end
 
-local neoterm_plugin = packer_plugins['neoterm']
-if neoterm_plugin and neoterm_plugin.loaded then
+if packer_plugins and packer_plugins['vim-commentary'] and packer_plugins['vim-commentary'].loaded then
+  mappings.vim_commentary()
+end
+
+if packer_plugins and packer_plugins['neoterm'] and packer_plugins['neoterm'].loaded then
   mappings.neoterm()
   vim.g.neoterm_default_mod = 'botright vertical'
   vim.g.neoterm_size = 60

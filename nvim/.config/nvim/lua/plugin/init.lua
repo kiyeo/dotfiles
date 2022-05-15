@@ -2,13 +2,17 @@ local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.n
 local packer_bootstrap
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   packer_bootstrap = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+  vim.cmd([[packadd packer.nvim]])
 end
 
-local packer = require('packer')
+local status_ok, packer = pcall(require, 'packer')
+if not status_ok then
+  print("Packer not found")
+  return
+end
 
 local config_compile_path = vim.fn.stdpath('data') .. '/site/pack/loader/start/packer/plugin/packer_compuled.lua'
 
-vim.cmd [[packadd packer.nvim]]
 packer.init({
   compile_path = config_compile_path
 })
@@ -31,12 +35,14 @@ packer.startup({
     use 'L3MON4D3/LuaSnip'
 
     -- completion
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'saadparwaiz1/cmp_luasnip'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'David-Kunz/cmp-npm'
+    use {
+      'hrsh7th/nvim-cmp',
+      'hrsh7th/cmp-nvim-lsp',
+      'saadparwaiz1/cmp_luasnip',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'David-Kunz/cmp-npm'
+    }
 
     -- fuzzy finder
     use {
@@ -47,14 +53,18 @@ packer.startup({
     -- parser generator tool and an incremental parsing library
     use {
       'nvim-treesitter/nvim-treesitter',
-      run = ':TSUpdate'
+      run = { function() vim.cmd(':TSUpdate') end }
     }
 
-    use 'mhartington/formatter.nvim'
-    use 'lewis6991/gitsigns.nvim'
-    use 'mfussenegger/nvim-dap'
-    use 'tpope/vim-commentary'
-    use 'kassio/neoterm'
+    -- utilities
+    use {
+      'mhartington/formatter.nvim', -- format code
+      'lewis6991/gitsigns.nvim',    -- git decoration and actions
+      'mfussenegger/nvim-dap',      -- debugger
+      'tpope/vim-commentary',       -- comment code
+      'kassio/neoterm',             -- terminal
+      'godlygeek/tabular'           -- column align text. E.g :Tabularize /--
+    }
 
     if packer_bootstrap then
       packer.sync()
@@ -65,11 +75,5 @@ packer.startup({
   }
 })
 
-if not pcall(
-  function ()
-    vim.cmd('source ' .. config_compile_path)
-    require 'plugin.settings'
-  end
-) then
-  print('Packer not installed. Run :PackerCompile and :PackerInstall')
-end
+pcall(vim.cmd, 'source' .. config_compile_path)
+require 'plugin.settings'

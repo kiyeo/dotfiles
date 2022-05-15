@@ -11,7 +11,9 @@ end
 function M.nvim_cmp()
   local cmp = require("cmp")
   return {
+		["<Tab>"] = cmp.mapping.select_next_item(),
 		["<C-j>"] = cmp.mapping.select_next_item(),
+    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
     ["<C-k>"] = cmp.mapping.select_prev_item(),
     ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
     ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
@@ -27,6 +29,9 @@ end
 
 function M.telescope()
   vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+  vim.keymap.set('n', '<Leader>gf', function() require("telescope.builtin").git_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+  vim.keymap.set('n', '<Leader>gs', function() require("telescope.builtin").grep_string() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+  vim.keymap.set('n', '<Leader>lg', function() require("telescope.builtin").live_grep() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
 end
 
 function M.formatter_nvim()
