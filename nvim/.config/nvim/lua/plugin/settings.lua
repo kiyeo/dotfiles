@@ -7,15 +7,63 @@ end
 
 local nvim_cmp_plugin = packer_plugins['nvim-cmp']
 if nvim_cmp_plugin and nvim_cmp_plugin.loaded then
+  local kind_icons = {
+    Text = "",
+    Method = "m",
+    Function = "",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "",
+    Interface = "",
+    Module = "",
+    Property = "",
+    Unit = "",
+    Value = "",
+    Enum = "",
+    Keyword = "",
+    Snippet = "",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+  }
+
   require("cmp").setup {
     snippet = {
       expand = function(args)
         require('luasnip').lsp_expand(args.body)
       end,
     },
+    window = {
+      documentation = require("cmp").config.window.bordered()
+    },
     mapping = mappings.nvim_cmp(),
+    formatting = {
+      fields = { "kind", "abbr", "menu" },
+      format = function(entry, vim_item)
+        -- Kind icons
+        vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
+        vim_item.menu = ({
+          nvim_lsp = "[LSP]",
+          luasnip = "[Snippet]",
+          buffer = "[Buffer]",
+          path = "[Path]",
+        })[entry.source.name]
+        return vim_item
+      end,
+    },
     sources = {
-      { name = 'nvim_lsp' }
+      { name = "nvim_lsp" },
+      { name = "luasnip" },
+      { name = "buffer" },
+      { name = "path" },
     },
   }
 end
@@ -52,7 +100,12 @@ end
 local telescope_plugin = packer_plugins['telescope.nvim']
 if telescope_plugin and telescope_plugin.loaded then
   require("telescope").setup {
-    on_attach = mappings.telescope()
+    on_attach = mappings.telescope(),
+    pickers = {
+      find_files = {
+        hidden = true
+      }
+    }
   }
 end
 
