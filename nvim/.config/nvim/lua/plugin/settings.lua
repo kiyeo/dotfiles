@@ -2,12 +2,12 @@ local mappings = require('plugin.mappings')
 
 local is_colorscheme, colorscheme_plugin = pcall(require, 'onenord')
 if is_colorscheme then
-  colorscheme_plugin.setup {}
+  colorscheme_plugin.setup()
 end
 
 local is_lualine, lualine = pcall(require, 'lualine')
 if is_lualine then
-  lualine.setup {}
+  lualine.setup()
 end
 
 local is_cmp, cmp = pcall(require, 'cmp')
@@ -79,7 +79,7 @@ local is_nvim_lsp_installer, nvim_lsp_installer = pcall(require, 'nvim-lsp-insta
 local is_lspconfig, lspconfig = pcall(require, 'lspconfig')
 local is_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if is_nvim_lsp_installer then
-  nvim_lsp_installer.setup {}
+  nvim_lsp_installer.setup()
   local installed_servers = nvim_lsp_installer.get_installed_servers()
   for _, installed_server in pairs(installed_servers) do
     for _, language in pairs(installed_server.languages) do
@@ -140,7 +140,7 @@ end
 
 local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
 if is_gitsigns then
-  gitsigns.setup {}
+  gitsigns.setup()
 end
 
 if packer_plugins and packer_plugins['vim-commentary'] and packer_plugins['vim-commentary'].loaded then
@@ -152,4 +152,12 @@ if packer_plugins and packer_plugins['neoterm'] and packer_plugins['neoterm'].lo
   vim.g.neoterm_default_mod = 'botright vertical'
   vim.g.neoterm_size = 60
   vim.g.neoterm_autoinsert = 1
+end
+
+local is_colorizer, colorizer = pcall(require, 'colorizer')
+if is_colorizer then
+  colorizer.setup({'*'}, {
+    RRGGBBAA = true;
+	  css = true;
+  })
 end

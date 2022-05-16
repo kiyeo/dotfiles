@@ -22,7 +22,7 @@ packer.startup({
     use 'wbthomason/packer.nvim'
 
     -- colorscheme
-    use "rmehri01/onenord.nvim" -- main theme
+    use "rmehri01/onenord.nvim"     -- main theme
     use 'nvim-lualine/lualine.nvim' -- statusline
 
     -- language server protocol
@@ -63,7 +63,8 @@ packer.startup({
       'mfussenegger/nvim-dap',      -- debugger
       'tpope/vim-commentary',       -- comment code
       'kassio/neoterm',             -- terminal
-      'godlygeek/tabular'           -- column align text. E.g :Tabularize /--
+      'godlygeek/tabular',          -- column align text. E.g :Tabularize /--
+      'norcalli/nvim-colorizer.lua' -- color highlighter
     }
 
     if packer_bootstrap then
