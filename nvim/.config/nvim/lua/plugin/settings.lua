@@ -5,6 +5,11 @@ if is_colorscheme then
   colorscheme_plugin.setup {}
 end
 
+local is_lualine, lualine = pcall(require, 'lualine')
+if is_lualine then
+  lualine.setup {}
+end
+
 local is_cmp, cmp = pcall(require, 'cmp')
 local is_luasnip, luasnip = pcall(require, 'luasnip')
 if is_cmp and is_luasnip then

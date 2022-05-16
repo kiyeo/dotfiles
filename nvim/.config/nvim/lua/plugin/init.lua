@@ -22,8 +22,8 @@ packer.startup({
     use 'wbthomason/packer.nvim'
 
     -- colorscheme
-    -- use 'glepnir/zephyr-nvim'
-    use 'rmehri01/onenord.nvim'
+    use "rmehri01/onenord.nvim" -- main theme
+    use 'nvim-lualine/lualine.nvim' -- statusline
 
     -- language server protocol
     use {
