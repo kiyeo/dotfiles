@@ -106,6 +106,29 @@ if is_nvim_lsp_installer then
   end
 end
 
+local is_nvim_tree, nvim_tree = pcall(require, 'nvim-tree')
+if is_nvim_tree then
+  nvim_tree.setup {
+    disable_netrw = true,
+    view = {
+      mappings = {
+        list = mappings.nvim_tree()
+      }
+    },
+    renderer = {
+      indent_markers = {
+        enable = true
+      }
+    },
+    diagnostics = {
+      enable = true
+    },
+    git = {
+      enable = false,
+    },
+  }
+end
+
 local is_telescope, telescope = pcall(require, 'telescope')
 if is_telescope then
   telescope.setup {

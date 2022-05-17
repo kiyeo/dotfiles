@@ -14,9 +14,9 @@ vim.keymap.set('t', '<Leader>fdn', '<C-\\><C-n>', {desc = 'Exit terminal mode an
 
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', {desc = 'Press Tab to move to the next buffer'})
 vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', {desc = 'Press Shift + Tab to move to the previous buffer'})
-vim.keymap.set('n', '<Leader>w', ':bdelete<CR>', {desc = 'Press "' .. vim.g.mapleader .. '" + w to delete the current buffer'})
+vim.keymap.set('n', '<Leader>w', ':b # | :bd #<CR>', {desc = 'Press "' .. vim.g.mapleader .. '" + w to delete the current buffer'})
 vim.keymap.set('t', '<Leader>w', '<C-\\><C-n>:bdelete!<CR>', {desc = 'Press "' .. vim.g.mapleader .. '" + w to exit terminal mode and delete the buffer'})
 
-vim.keymap.set('n', '<Leader>le', ':Lexplore 30<CR>', {desc = 'Press "' .. vim.g.mapleader .. '" + e to open Netrw'})
+vim.keymap.set('n', '<Leader>e', ':Lexplore 30<CR>', {desc = 'Press "' .. vim.g.mapleader .. '" + e to open Netrw'})
 
-vim.keymap.set({'n', 'x'}, '<Leader>el', 'v$h', {desc = 'Press "' .. vim.g.mapleader .. '" + e + l to select till the end of the line'})
+vim.keymap.set({'n', 'x'}, '<Leader>ll', 'v$h', {desc = 'Press "' .. vim.g.mapleader .. '" + e + l to select till the end of the line'})

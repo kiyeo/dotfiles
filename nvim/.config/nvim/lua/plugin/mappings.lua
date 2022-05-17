@@ -27,6 +27,10 @@ function M.nvim_cmp()
   };
 end
 
+function M.nvim_tree()
+  vim.keymap.set('n', '<Leader>e', function() require("nvim-tree").toggle() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+end
+
 function M.telescope()
   vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
   vim.keymap.set('n', '<Leader>gf', function() require("telescope.builtin").git_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})

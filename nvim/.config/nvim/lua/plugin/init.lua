@@ -44,6 +44,12 @@ packer.startup({
       'David-Kunz/cmp-npm'
     }
 
+    -- file explorer
+    use {
+        'kyazdani42/nvim-tree.lua',
+        requires = { 'kyazdani42/nvim-web-devicons' } -- file icons
+    }
+
     -- fuzzy finder
     use {
       'nvim-telescope/telescope.nvim',
