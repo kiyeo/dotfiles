@@ -2,7 +2,15 @@ local mappings = require('plugin.mappings')
 
 local is_colorscheme, colorscheme_plugin = pcall(require, 'onenord')
 if is_colorscheme then
-  colorscheme_plugin.setup()
+  colorscheme_plugin.setup {
+    custom_highlights = {
+      BufferLineIndicatorSelected = { fg = "#88c0d0", bg = "#2e3440" },
+      BufferLineFill = { fg = "#ECEFF4", bg = "#242932" },
+      GitSignsChange = { fg = '#d08770' },
+      GitSignsChangeNr = { fg = '#d08770' },
+      GitSignsChangeLn = { fg = '#d08770' }
+    }
+  }
 end
 
 local is_lualine, lualine = pcall(require, 'lualine')
@@ -111,6 +119,7 @@ if is_nvim_tree then
   nvim_tree.setup {
     disable_netrw = true,
     view = {
+      width = 35,
       mappings = {
         list = mappings.nvim_tree()
       }
@@ -126,6 +135,32 @@ if is_nvim_tree then
     git = {
       enable = false,
     },
+  }
+end
+
+local is_bufferline, bufferline = pcall(require, 'bufferline')
+if is_bufferline then
+  bufferline.setup {
+    options = {
+      tab_size = 25,
+      sort_by = "insert_at_end",
+      offsets = { { filetype = "NvimTree", text = "" } },
+      separator_style = { "", "" }
+    },
+    highlights = {
+      buffer_selected = {
+        gui = "bold"
+      },
+      duplicate_selected = {
+        gui = "bold"
+      },
+      duplicate_visible = {
+        gui = "bold"
+      },
+      duplicate = {
+        gui = "bold"
+      },
+    }
   }
 end
 
@@ -163,7 +198,12 @@ end
 
 local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
 if is_gitsigns then
-  gitsigns.setup()
+  gitsigns.setup {
+    signs = {
+      delete = { text = '│' }
+    },
+    numhl = true
+  }
 end
 
 if packer_plugins and packer_plugins['vim-commentary'] and packer_plugins['vim-commentary'].loaded then

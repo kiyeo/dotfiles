@@ -47,19 +47,26 @@ packer.startup({
     -- file explorer
     use {
         'kyazdani42/nvim-tree.lua',
-        requires = { 'kyazdani42/nvim-web-devicons' } -- file icons
+        requires = 'kyazdani42/nvim-web-devicons' -- file icons
+    }
+
+    -- open buffer tab style
+    use {
+      'akinsho/bufferline.nvim',
+      tag = "v2.*",
+      requires = 'kyazdani42/nvim-web-devicons' -- file icons
     }
 
     -- fuzzy finder
     use {
       'nvim-telescope/telescope.nvim',
-      requires = { {'nvim-lua/plenary.nvim'} }
+      requires = 'nvim-lua/plenary.nvim'
     }
 
     -- parser generator tool and an incremental parsing library
     use {
       'nvim-treesitter/nvim-treesitter',
-      run = { function() vim.cmd(':TSUpdate') end }
+      run = function() vim.cmd(':TSUpdate') end
     }
 
     -- utilities
