@@ -50,11 +50,11 @@ function M.toggleterm()
   vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:ToggleTerm<CR>', {desc = 'toggleterm - Press Ctrl + q to toggle terminal'})
   vim.keymap.set({'n', 't'}, '<Leader>ts',
     function ()
+      local toggleterm = require('toggleterm')
       if #require('toggleterm.terminal').get_all() == 0 then
-        print('No terminals open')
+        toggleterm.toggle(1)
         return
       end
-      local toggleterm = require('toggleterm')
       vim.ui.input({ prompt = 'Enter terminal number (A/a/[0-9]+): ' },
         function(user_input)
           if user_input == nil or user_input == 'A' or user_input == 'a' then

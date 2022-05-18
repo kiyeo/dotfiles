@@ -144,7 +144,7 @@ if is_bufferline then
     options = {
       tab_size = 25,
       sort_by = "insert_at_end",
-      offsets = { { filetype = "NvimTree", text = "" } },
+      offsets = { { filetype = "NvimTree", text = "", padding = 1 }, { filetype = "toggleterm", text = "" } },
       separator_style = { "", "" }
     },
     highlights = {
@@ -200,7 +200,9 @@ local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
 if is_gitsigns then
   gitsigns.setup {
     signs = {
-      delete = { text = '│' }
+      add = { text = '▎' },
+      change = { text = '▎' },
+      delete = { text = '▎' }
     },
     numhl = true
   }
