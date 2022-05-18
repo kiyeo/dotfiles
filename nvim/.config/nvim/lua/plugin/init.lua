@@ -75,7 +75,7 @@ packer.startup({
       'lewis6991/gitsigns.nvim',    -- git decoration and actions
       'mfussenegger/nvim-dap',      -- debugger
       'tpope/vim-commentary',       -- comment code
-      'kassio/neoterm',             -- terminal
+      'akinsho/toggleterm.nvim',    -- terminal
       'godlygeek/tabular',          -- column align text. E.g :Tabularize /--
       'norcalli/nvim-colorizer.lua' -- color highlighter
     }

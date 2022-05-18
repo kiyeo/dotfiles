@@ -210,11 +210,14 @@ if packer_plugins and packer_plugins['vim-commentary'] and packer_plugins['vim-c
   mappings.vim_commentary()
 end
 
-if packer_plugins and packer_plugins['neoterm'] and packer_plugins['neoterm'].loaded then
-  mappings.neoterm()
-  vim.g.neoterm_default_mod = 'botright vertical'
-  vim.g.neoterm_size = 60
-  vim.g.neoterm_autoinsert = 1
+local is_toggleterm, toggleterm = pcall(require, 'toggleterm')
+if is_toggleterm then
+  toggleterm.setup {
+    size = 60,
+    open_mapping = mappings.toggleterm(),
+    shade_terminals = false,
+    direction = 'vertical'
+  }
 end
 
 local is_colorizer, colorizer = pcall(require, 'colorizer')

@@ -32,10 +32,10 @@ function M.nvim_tree()
 end
 
 function M.telescope()
-  vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
-  vim.keymap.set('n', '<Leader>gf', function() require("telescope.builtin").git_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
-  vim.keymap.set('n', '<Leader>gs', function() require("telescope.builtin").grep_string() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
-  vim.keymap.set('n', '<Leader>lg', function() require("telescope.builtin").live_grep() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+  vim.keymap.set('n', '<Leader><Leader>', function() require("telescope.builtin").find_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" + "'  .. vim.g.mapleader .. '" to fuzzy find files'})
+  vim.keymap.set('n', '<Leader>gf', function() require("telescope.builtin").git_files() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" + g + f to fuzzy find git files'})
+  vim.keymap.set('n', '<Leader>gs', function() require("telescope.builtin").grep_string() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" + g + s to search files by string under cursor'})
+  vim.keymap.set('n', '<Leader>lg', function() require("telescope.builtin").live_grep() end, {desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" + l + g to search files by content'})
 end
 
 function M.formatter_nvim()
@@ -46,8 +46,26 @@ function M.vim_commentary()
   vim.keymap.set({'n', 'v'}, '<C-_>', ':Commentary<CR>', {desc = 'vim-commentary - Press Ctrl + / to comment line/selection'})
 end
 
-function M.neoterm()
-  vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:Ttoggle<CR>', {desc = 'neoterm - Press Ctrl + q to toggle terminal'})
+function M.toggleterm()
+  vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:ToggleTerm<CR>', {desc = 'toggleterm - Press Ctrl + q to toggle terminal'})
+  vim.keymap.set({'n', 't'}, '<Leader>ts',
+    function ()
+      if #require('toggleterm.terminal').get_all() == 0 then
+        print('No terminals open')
+        return
+      end
+      local toggleterm = require('toggleterm')
+      vim.ui.input({ prompt = 'Enter terminal number (A/a/[0-9]+): ' },
+        function(user_input)
+          if user_input == nil or user_input == 'A' or user_input == 'a' then
+            toggleterm.toggle_all()
+          else
+            toggleterm.toggle(tonumber(user_input))
+          end
+        end
+      )
+    end,
+  {desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + s to be prompted to select terminal'})
 end
 
 return M
