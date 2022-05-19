@@ -199,6 +199,7 @@ end
 local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
 if is_gitsigns then
   gitsigns.setup {
+    on_attach = mappings.gitsigns(),
     signs = {
       add = { text = '▎' },
       change = { text = '▎' },
