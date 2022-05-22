@@ -2,64 +2,19 @@
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
-
 COLORTERM=truecolor
-
-# Find and set branch name var if in git repository.
-function git_branch_name()
-{
-  branch=$(git symbolic-ref HEAD 2> /dev/null | awk 'BEGIN{FS="/"} {print $NF}')
-  if [[ $branch != "" ]]; then
-    count_unstaged="$(git diff --name-only 2> /dev/null | grep -c "")"
-    if [[ $count_unstaged -gt 0 ]]; then
-      count_unstaged="%B%F{red}~$count_unstaged%F{#00afff}%b"
-    fi
-    count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c "")"
-    if [[ $count_staged -gt 0 ]]; then
-      count_staged="%F{#87af5f}+$count_staged%F{#00afff}"
-    fi
-    count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c "")"
-    if [[ $count_untracked -gt 0 ]]; then
-      count_untracked="%B%F{red}~$count_untracked%F{#00afff}%b"
-    fi
-    count_unpushed="$(git cherry -v 2> /dev/null | grep -c "")"
-    if [[ $count_unpushed -gt 0 ]]; then
-      count_unpushed=" %F{#87af5f}+$count_unpushed%F{#00afff} |"
-    else
-      count_unpushed=""
-    fi
-    echo " ($branch$count_unpushed $count_staged $count_unstaged $count_untracked)"
-  fi
-}
-
-
-# Enable substitution in the prompt.
-setopt prompt_subst
-
-# Enable colors and change prompt:
-autoload colors && colors
-prompt='%F{#87af5f}%n %U%F{#00afff}%~%u$(git_branch_name) '
-
-# Turn off all beeps
-unsetopt BEEP
-# Turn off autocomplete beeps
-# unsetopt LIST_BEEP
-
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
 # History in cache directory:
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
 
-# Basic auto/tab complete:
-autoload -U compinit
+setopt No_Beep                     # Turn off all beeps
+setopt prompt_subst                # Enable substitution in the prompt.
+autoload colors && colors          # Enable colors and change prompt:
+autoload -Uz compinit              # Basic auto/tab complete:
 zstyle ':completion:*' menu select
 zmodload zsh/complist
-compinit
-#_comp_options+=(globdots)		# Include hidden files.
+_comp_options+=(globdots)          # Include hidden files.
 
 #cd - history
 setopt AUTO_PUSHD                  # pushes the old directory onto the stack
@@ -68,10 +23,38 @@ setopt CDABLE_VARS                 # expand the expression (allows 'cd -2/tmp')
 autoload -U compinit && compinit   # load + start completion
 zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;5;12'
 
+# Find and set branch name var if in git repository.
+function git_branch_name()
+{
+  local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
+  if [[ $branch != "" ]]; then
+    local count_unstaged="$(git diff --name-only 2> /dev/null | grep -c ^)"
+    if [[ $count_unstaged -gt 0 ]]; then
+      count_unstaged="%B%F{red}~$count_unstaged%F{#00afff}%b"
+    fi
+    local count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c ^)"
+    if [[ $count_staged -gt 0 ]]; then
+      count_staged="%F{#87af5f}+$count_staged%F{#00afff}"
+    fi
+    local count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c ^)"
+    if [[ $count_untracked -gt 0 ]]; then
+      count_untracked="%B%F{red}~$count_untracked%F{#00afff}%b"
+    fi
+    local count_unpushed="$(git cherry -v 2> /dev/null | grep -c ^)"
+    if [[ $count_unpushed -gt 0 ]]; then
+      count_unpushed=" %F{#87af5f}+$count_unpushed%F{#00afff} |"
+    else
+      count_unpushed=""
+    fi
+    echo " ( $branch$count_unpushed $count_staged $count_unstaged $count_untracked)"
+  fi
+}
+
+prompt='%F{#87af5f}%n %U%F{#00afff}%~%u$(git_branch_name) '
+
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
-
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
@@ -104,12 +87,6 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 export ZFUNCTIONS=${ZDOTDIR:-$HOME}/.zfunctions
 [ -d $ZFUNCTIONS ] || mkdir -p $ZFUNCTIONS
 
-# https://github.com/zsh-users/zsh-autosuggestions/issues/529
-if autoload -U +X add-zle-hook-widget 2>/dev/null; then
-    add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_fetch
-    add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_highlight_apply
-fi
-
 source ~/.zsh/aliases.zsh
 
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -124,6 +101,12 @@ ZSH_HIGHLIGHT_STYLES[path]='fg=#00afff,underline' # .zshrc, .config, dev, etc...
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^f' autosuggest-accept
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#585858,underline'
+
+# https://github.com/zsh-users/zsh-autosuggestions/issues/529
+if autoload -U +X add-zle-hook-widget 2>/dev/null; then
+    add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_fetch
+    add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_highlight_apply
+fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH=~/.local/bin:$PATH

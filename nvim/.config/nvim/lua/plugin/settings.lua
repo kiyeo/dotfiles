@@ -82,7 +82,7 @@ if is_cmp and is_luasnip then
   }
 end
 
-local installed_languages = {}
+local installed_languages = { 'tsx' }
 local is_nvim_lsp_installer, nvim_lsp_installer = pcall(require, 'nvim-lsp-installer')
 local is_lspconfig, lspconfig = pcall(require, 'lspconfig')
 local is_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
@@ -185,6 +185,10 @@ if is_nvim_treesitter_configs then
     },
     indent = {
       enable = true
+    },
+    context_commentstring = {
+      enable = true,
+      enable_autocmd = false
     }
   }
 end
@@ -209,8 +213,26 @@ if is_gitsigns then
   }
 end
 
-if packer_plugins and packer_plugins['vim-commentary'] and packer_plugins['vim-commentary'].loaded then
-  mappings.vim_commentary()
+
+local is_comment, comment = pcall(require, 'Comment')
+if is_comment then
+  comment.setup {
+    pre_hook = function(ctx)
+      local U = require("Comment.utils")
+
+      local location = nil
+      if ctx.ctype == U.ctype.block then
+        location = require("ts_context_commentstring.utils").get_cursor_location()
+      elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+        location = require("ts_context_commentstring.utils").get_visual_start_location()
+      end
+
+      return require("ts_context_commentstring.internal").calculate_commentstring {
+        key = ctx.ctype == U.ctype.line and "__default" or "__multiline",
+        location = location,
+      }
+    end
+  }
 end
 
 local is_toggleterm, toggleterm = pcall(require, 'toggleterm')

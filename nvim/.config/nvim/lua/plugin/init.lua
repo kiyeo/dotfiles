@@ -71,13 +71,14 @@ packer.startup({
 
     -- utilities
     use {
-      'mhartington/formatter.nvim', -- format code
-      'lewis6991/gitsigns.nvim',    -- git decoration and actions
-      'mfussenegger/nvim-dap',      -- debugger
-      'tpope/vim-commentary',       -- comment code
-      'akinsho/toggleterm.nvim',    -- terminal
-      'godlygeek/tabular',          -- column align text. E.g :Tabularize /--
-      'norcalli/nvim-colorizer.lua' -- color highlighter
+      'mhartington/formatter.nvim',                  -- format code
+      'lewis6991/gitsigns.nvim',                     -- git decoration and actions
+      'mfussenegger/nvim-dap',                       -- debugger
+      'numToStr/Comment.nvim',                       -- comment code
+      'JoosepAlviste/nvim-ts-context-commentstring', -- embedded language commenting
+      'akinsho/toggleterm.nvim',                     -- terminal
+      'godlygeek/tabular',                           -- column align text. E.g :Tabularize /--
+      'norcalli/nvim-colorizer.lua'                  -- color highlighter
     }
 
     if packer_bootstrap then
