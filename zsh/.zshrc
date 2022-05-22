@@ -27,28 +27,32 @@ zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;
 function git_branch_name()
 {
   local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
-  if [[ $branch != "" ]]; then
-    local count_unstaged="$(git diff --name-only 2> /dev/null | grep -c ^)"
-    if [[ $count_unstaged -gt 0 ]]; then
-      count_unstaged="%B%F{red}~$count_unstaged%F{#00afff}%b"
-    fi
-    local count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c ^)"
-    if [[ $count_staged -gt 0 ]]; then
-      count_staged="%F{#87af5f}+$count_staged%F{#00afff}"
-    fi
-    local count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c ^)"
-    if [[ $count_untracked -gt 0 ]]; then
-      count_untracked="%B%F{red}~$count_untracked%F{#00afff}%b"
-    fi
+  if [[ ! -z "$branch" ]]; then
+
     local count_unpushed="$(git cherry -v 2> /dev/null | grep -c ^)"
-    if [[ $count_unpushed -gt 0 ]]; then
-      count_unpushed=" %F{#87af5f}+$count_unpushed%F{#00afff} |"
-    else
-      count_unpushed=""
+    count_unpushed="$([[ "$count_unpushed" -gt 0 ]] && echo " %F{#87af5f} ↑$count_unpushed%F{#00afff} |" || echo "")"
+
+    local count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c ^)"
+    count_staged="$([[ "$count_staged" -gt 0 ]] && echo "%F{#87af5f}+$count_staged%F{#00afff}" || echo "$count_staged")"
+
+    local count_unstaged="$(git diff --name-only 2> /dev/null | grep -c ^)"
+    if [[ "$count_unstaged" -gt 0 ]]; then
+      local count_modified="$(git diff --name-status | grep -c "^M")"
+      count_modified=$([[ $count_modified -gt 0 ]] && echo "%B%F{#ffaf00}~$count_modified%F{#00afff}%b" || echo "$count_modified")
+      local count_deleted="$(git diff --name-status | grep -c "^D")"
+      count_deleted=$([[ $count_deleted -gt 0 ]] && echo "%B%F{red}-$count_deleted%F{#00afff}%b" || echo "$count_deleted")
+      count_unstaged="$count_modified $count_deleted"
     fi
-    echo " ( $branch$count_unpushed $count_staged $count_unstaged $count_untracked)"
+
+    local count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c ^)"
+    count_untracked="$([[ "$count_untracked" -gt 0 ]] && echo "%B%F{#ffaf00}+$count_untracked%F{#00afff}%b" || echo "$count_untracked")"
+
+    local count_stash="$(git stash list 2> /dev/null | grep -c ^)"
+    count_stash="$([[ "$count_stash" -gt 0 ]] && echo " %B%F{#ffaf00}$count_stash%F{#00afff}%b" || echo "")"
+
+    echo " ( $branch$count_unpushed $count_staged $count_unstaged $count_untracked$count_stash)"
   fi
-}
+} 
 
 prompt='%F{#87af5f}%n %U%F{#00afff}%~%u$(git_branch_name) '
 
