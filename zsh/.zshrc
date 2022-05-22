@@ -14,6 +14,7 @@ autoload colors && colors          # Enable colors and change prompt:
 autoload -Uz compinit              # Basic auto/tab complete:
 zstyle ':completion:*' menu select
 zmodload zsh/complist
+compinit
 _comp_options+=(globdots)          # Include hidden files.
 
 #cd - history
@@ -29,32 +30,41 @@ function git_branch_name()
   local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
   if [[ ! -z "$branch" ]]; then
 
-    local count_unpushed="$(git cherry -v 2> /dev/null | grep -c ^)"
-    count_unpushed="$([[ "$count_unpushed" -gt 0 ]] && echo " %F{#87af5f} ↑$count_unpushed%F{#00afff} |" || echo "")"
+    local commit_status="$(git status -sb 2> /dev/null | grep -e "ahead" -e "behind")"
+    local count_commit_status="$(echo "$commit_status" | grep -c ^)"
+    if [[ "$count_commit_status" -gt 0 ]]; then
+      local count_ahead="$(echo "$commit_status" | sed -n 's/.*ahead \([0-9]*\).*/\1/p')"
+      count_ahead="$([[ "$count_ahead" -gt 0 ]] && echo " %F{#88bf6a}↑$count_ahead%F{#00afff}" || echo "")"
+      local count_behind="$(echo "$commit_status" | sed -n 's/.*behind \([0-9]*\).*/\1/p')"
+      count_behind="$([[ "$count_behind" -gt 0 ]] && echo " %F{#e36154}↓$count_behind%F{#00afff}" || echo "")"
+      count_commit_status="$count_ahead$count_behind |"
+    else
+      count_commit_status=""
+    fi
 
     local count_staged="$(git diff --name-only --staged 2> /dev/null | grep -c ^)"
-    count_staged="$([[ "$count_staged" -gt 0 ]] && echo "%F{#87af5f}+$count_staged%F{#00afff}" || echo "$count_staged")"
+    count_staged="$([[ "$count_staged" -gt 0 ]] && echo "%F{#88bf6a}+$count_staged%F{#00afff}" || echo "$count_staged")"
 
     local count_unstaged="$(git diff --name-only 2> /dev/null | grep -c ^)"
     if [[ "$count_unstaged" -gt 0 ]]; then
       local count_modified="$(git diff --name-status | grep -c "^M")"
-      count_modified=$([[ $count_modified -gt 0 ]] && echo "%B%F{#ffaf00}~$count_modified%F{#00afff}%b" || echo "$count_modified")
+      count_modified=$([[ $count_modified -gt 0 ]] && echo "%F{#ffaf00}~$count_modified%F{#00afff}" || echo "$count_modified")
       local count_deleted="$(git diff --name-status | grep -c "^D")"
-      count_deleted=$([[ $count_deleted -gt 0 ]] && echo "%B%F{red}-$count_deleted%F{#00afff}%b" || echo "$count_deleted")
+      count_deleted=$([[ $count_deleted -gt 0 ]] && echo "%F{#e36154}-$count_deleted%F{#00afff}" || echo "$count_deleted")
       count_unstaged="$count_modified $count_deleted"
     fi
 
     local count_untracked="$(git ls-files --others --exclude-standard 2> /dev/null | grep -c ^)"
-    count_untracked="$([[ "$count_untracked" -gt 0 ]] && echo "%B%F{#ffaf00}+$count_untracked%F{#00afff}%b" || echo "$count_untracked")"
+    count_untracked="$([[ "$count_untracked" -gt 0 ]] && echo "%F{#ffaf00}+$count_untracked%F{#00afff}" || echo "$count_untracked")"
 
     local count_stash="$(git stash list 2> /dev/null | grep -c ^)"
-    count_stash="$([[ "$count_stash" -gt 0 ]] && echo " %B%F{#ffaf00}$count_stash%F{#00afff}%b" || echo "")"
+    count_stash="$([[ "$count_stash" -gt 0 ]] && echo " %F{#ffaf00}$count_stash%F{#00afff}" || echo "")"
 
-    echo " ( $branch$count_unpushed $count_staged $count_unstaged $count_untracked$count_stash)"
+    echo " ( $branch$count_commit_status $count_staged $count_unstaged $count_untracked$count_stash)"
   fi
 } 
 
-prompt='%F{#87af5f}%n %U%F{#00afff}%~%u$(git_branch_name) '
+prompt='%F{#88bf6a}%n %U%F{#00afff}%~%u$(git_branch_name) '
 
 # vi mode
 bindkey -v
