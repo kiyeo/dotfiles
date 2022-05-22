@@ -30,6 +30,9 @@ function git_branch_name()
   local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
   if [[ ! -z "$branch" ]]; then
 
+    local origin_head="$(git branch --list master main | sed 's/.*\(master\|main\)/\1/')"
+    local head_commit_status="$(git rev-list --left-right --count  origin/"$origin_head"...origin/"$(git branch --show-current)" | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')"
+
     local commit_status="$(git status -sb 2> /dev/null | grep -e "ahead" -e "behind")"
     local count_commit_status="$(echo "$commit_status" | grep -c ^)"
     if [[ "$count_commit_status" -gt 0 ]]; then
@@ -60,7 +63,7 @@ function git_branch_name()
     local count_stash="$(git stash list 2> /dev/null | grep -c ^)"
     count_stash="$([[ "$count_stash" -gt 0 ]] && echo " %F{#ffaf00}$count_stash%F{#00afff}" || echo "")"
 
-    echo " ( $branch$count_commit_status $count_staged $count_unstaged $count_untracked$count_stash)"
+    echo " ( $head_commit_status $branch$count_commit_status $count_staged $count_unstaged $count_untracked$count_stash)"
   fi
 } 
 
