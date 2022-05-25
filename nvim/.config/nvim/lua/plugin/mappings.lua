@@ -44,8 +44,8 @@ function M.formatter_nvim()
 end
 
 function M.gitsigns()
-  vim.keymap.set('n', ']c', "&diff ? ']c' : ':Gitsigns next_hunk<CR>'", {expr=true, desc = 'gitsigns.nvim -            Press ] + c to go to next hunk git changes'})
-  vim.keymap.set('n', '[c', "&diff ? '[c' : ':Gitsigns prev_hunk<CR>'", {expr=true, desc = 'gitsigns.nvim -            Press [ + c to go to previous hunk git changes'})
+  vim.keymap.set('n', '[c', "&diff ? '[c' : ':Gitsigns next_hunk<CR>'", {expr=true, desc = 'gitsigns.nvim -            Press [ + c to go to next hunk git changes'})
+  vim.keymap.set('n', ']c', "&diff ? ']c' : ':Gitsigns prev_hunk<CR>'", {expr=true, desc = 'gitsigns.nvim -            Press ] + c to go to previous hunk git changes'})
   vim.keymap.set({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>', {desc = 'gitsigns.nvim -                        Press "' .. vim.g.mapleader .. '" + h + s to stage hunk'})
   vim.keymap.set({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>', {desc = 'gitsigns.nvim -                        Press "' .. vim.g.mapleader .. '" + h + r to reset hunk'})
   vim.keymap.set('n', '<leader>hS', ':Gitsigns stage_buffer<CR>', {desc = 'gitsigns.nvim -                             Press "' .. vim.g.mapleader .. '" + h + S to stage file'})

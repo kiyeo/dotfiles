@@ -98,18 +98,55 @@ if is_nvim_lsp_installer then
         capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
       }
 
-      if installed_server.name == 'sumneko_lua' then
-        lspconfig[installed_server.name].setup {
-          on_attach = mappings.nvim_lspconfig(),
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { 'vim', 'packer_plugins' }
-              }
+      local function lua()
+        if installed_server.name == 'sumneko_lua' then
+          return {
+            diagnostics = {
+              globals = { 'vim', 'packer_plugins' }
             }
           }
-        }
+        end
       end
+
+      local function yaml()
+        if installed_server.name == 'yamlls' then
+          return {
+            format = {
+              enable = true,
+            },
+            hover = true,
+            completion = true,
+            customTags = {
+              "!Base64 scalar",
+              "!Cidr scalar",
+              "!And sequence",
+              "!Equals sequence",
+              "!If sequence",
+              "!Not sequence",
+              "!Or sequence",
+              "!Condition scalar",
+              "!FindInMap sequence",
+              "!GetAtt scalar",
+              "!GetAZs scalar",
+              "!ImportValue scalar",
+              "!Join sequence",
+              "!Select sequence",
+              "!Split sequence",
+              "!Sub scalar",
+              "!Transform mapping",
+              "!Ref scalar",
+            },
+          }
+        end
+      end
+
+      lspconfig[installed_server.name].setup {
+        on_attach = mappings.nvim_lspconfig(),
+        settings = {
+          Lua = lua(),
+          yaml = yaml()
+        }
+      }
     end
   end
 end
