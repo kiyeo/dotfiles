@@ -250,6 +250,38 @@ if is_gitsigns then
   }
 end
 
+local is_dap, dap = pcall(require, 'dap')
+if is_dap then
+  mappings.nvim_dap()
+  dap.defaults.fallback.terminal_win_cmd = '20split new'
+  vim.highlight.create('DapBreakpoint', { ctermbg=0, guifg='#E06C75' }, false)
+  vim.highlight.create('DapBreakpointRejected', { ctermbg=0, guifg='#61afef' }, false)
+  vim.highlight.create('DapStopped', { ctermbg=0, guifg='#E06C75' }, false)
+  vim.fn.sign_define('DapBreakpoint', {text='', texthl='DapBreakpoint', linehl='', numhl='DapBreakpoint'})
+  vim.fn.sign_define('DapBreakpointRejected', {text='', texthl='DapBreakpointRejected', linehl='', numhl='DapBreakpointRejected'})
+  vim.fn.sign_define('DapStopped', {text='卑', texthl='DapStopped', linehl='', numhl='DapStopped'})
+
+  local debug_adapters = {
+    'microsoft/vscode-node-debug2',
+  }
+  for _, debug_adapter in ipairs(debug_adapters) do
+    local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/' .. debug_adapter
+    if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+      vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/' .. debug_adapter, install_path})
+    end
+
+    if debug_adapter == 'microsoft/vscode-node-debug2' then
+      if vim.fn.empty(vim.fn.glob(install_path .. '/out/src/')) > 0 then
+        vim.cmd('!cd ' .. install_path .. ' && npm install && npm run build')
+      end
+      dap.adapters.node2 = {
+        type = 'executable',
+        command = 'node',
+        args = { install_path .. '/out/src/nodeDebug.js' }
+      }
+    end
+  end
+end
 
 local is_comment, comment = pcall(require, 'Comment')
 if is_comment then
@@ -278,7 +310,9 @@ if is_toggleterm then
     size = 60,
     open_mapping = mappings.toggleterm(),
     shade_terminals = false,
-    direction = 'vertical'
+    direction = 'vertical',
+    start_in_insert = false,
+    on_open = function() vim.cmd("startinsert!") end
   }
 end
 

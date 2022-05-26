@@ -70,10 +70,15 @@ packer.startup({
     }
 
     -- utilities
+
+    use {
+      'mfussenegger/nvim-dap',                       -- debugger
+      'theHamsta/nvim-dap-virtual-text'              -- debugger variable virtual text
+    }
+
     use {
       'mhartington/formatter.nvim',                  -- format code
       'lewis6991/gitsigns.nvim',                     -- git decoration and actions
-      'mfussenegger/nvim-dap',                       -- debugger
       'numToStr/Comment.nvim',                       -- comment code
       'JoosepAlviste/nvim-ts-context-commentstring', -- embedded language commenting
       'akinsho/toggleterm.nvim',                     -- terminal

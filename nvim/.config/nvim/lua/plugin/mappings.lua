@@ -59,9 +59,25 @@ function M.gitsigns()
   vim.keymap.set('n', '<leader>td', ':Gitsigns toggle_deleted<CR>', {desc = 'gitsigns.nvim -                           Press "' .. vim.g.mapleader .. '" + t + d to see deleted lines in current file'})
 end
 
+function M.nvim_dap()
+  local dap = require('dap')
+  vim.keymap.set('n', '<Leader>db', ':DapToggleBreakpoint<CR>', {desc = 'nvim-dap -                                                       Press "' .. vim.g.mapleader .. '" + d + b to create or remove a breakpoint at the current line.'})
+  vim.keymap.set('n', '<Leader>dB', function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, {desc = 'nvim-dap -        Press "' .. vim.g.mapleader .. '" + d + B to guarantee overwriting of previous breakpoint. Otherwise, same as toggle_breakpoint.'})
+  vim.keymap.set('n', '<Leader>lp', function() dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end, {desc = 'nvim-dap - Press "' .. vim.g.mapleader .. '" + l + p to log message and set_breakpoint.'})
+  vim.keymap.set('n', '<A-h>', ':DapContinue<CR>', {desc = 'nvim-dap -                                                                    Press Alt + h to resume the execution of an application if a debug session is active and a thread was stopped.'})
+  vim.keymap.set('n', '<A-j>', ':DapStepInto<CR>', {desc = 'nvim-dap -                                                                    Press Alt + j to request the debugee to step into a function or method if possible.'})
+  vim.keymap.set('n', '<A-k>', ':DapStepOver<CR>', {desc = 'nvim-dap -                                                                    Press Alt + k to request the debugee to run again for one step.'})
+  vim.keymap.set('n', '<A-l>', ':DapStepOut<CR>', {desc = 'nvim-dap -                                                                     Press Alt + l to request the debugee to step out of a function or method if possible.'})
+  vim.keymap.set('n', '<Leader>dr', ':DapToggleRepl<CR>', {desc = 'nvim-dap -                                                             Press "' .. vim.g.mapleader .. '" + d + r to opens the REPL if it is closed, otherwise closes it.'})
+  vim.keymap.set('n', '<Leader>dl', function() dap.run_last() end, {desc = 'nvim-dap -                                                    Press "' .. vim.g.mapleader .. '" + d + l to re-runs the last debug adapter / configuration that ran using dap.run().'})
+  vim.keymap.set('n', '<leader>dk', function() dap.up() end, {desc = 'nvim-dap -                                                          Press "' .. vim.g.mapleader .. '" + d + k to go up in current stacktrace without stepping.'})
+  vim.keymap.set('n', '<leader>dj', function() dap.down() end, {desc = 'nvim-dap -                                                        Press "' .. vim.g.mapleader .. '" + d + j to go down in current stacktrace without stepping.'})
+  vim.keymap.set('n', '<leader>da', function() dap.attach() end, {desc = 'nvim-dap -                                     Press "' .. vim.g.mapleader .. '" d + a to attach a running debug adapter and then initialize it with the given dap-configuration.'})
+end
+
 function M.toggleterm()
   vim.keymap.set({'n', 't'}, '<C-q>', '<C-\\><C-n>:ToggleTerm<CR>', {desc = 'toggleterm - Press Ctrl + q to toggle terminal'})
-  vim.keymap.set({'n', 't'}, '<Leader>ts',
+  vim.keymap.set({'n', 't'}, '<C-t>s',
     function ()
       local toggleterm = require('toggleterm')
       if #require('toggleterm.terminal').get_all() == 0 then
@@ -72,7 +88,7 @@ function M.toggleterm()
         function(user_input)
           if user_input == nil or user_input == 'A' or user_input == 'a' then
             toggleterm.toggle_all()
-          else
+          elseif tonumber(user_input) then
             toggleterm.toggle(tonumber(user_input))
           end
         end

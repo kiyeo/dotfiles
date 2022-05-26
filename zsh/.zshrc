@@ -29,10 +29,12 @@ function git_branch_name()
 {
   local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
   if [[ ! -z "$branch" ]]; then
-
-    local origin_head="$(git branch --list master main | sed 's/.*\(master\|main\)/\1/')"
-    local head_commit_status="$(git rev-list --left-right --count  origin/"$origin_head"...origin/"$(git branch --show-current)" | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')"
-
+    local current_branch="$(git branch --list master main | sed 's/.*\(master\|main\)/\1/')"
+    if [[ "$(git name-rev @{u} 2> /dev/null)" ]]; then
+      local head_commit_status="$(git rev-list --left-right --count  origin/"$current_branch"...origin/"$(git branch --show-current)" | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')"
+    else
+      local head_commit_status="%F{#e36154}%F{#00afff}"
+    fi
     local commit_status="$(git status -sb 2> /dev/null | grep -e "ahead" -e "behind")"
     local count_commit_status="$(echo "$commit_status" | grep -c ^)"
     if [[ "$count_commit_status" -gt 0 ]]; then
@@ -67,18 +69,24 @@ function git_branch_name()
   fi
 } 
 
-prompt='%F{#88bf6a}%n %U%F{#00afff}%~%u$(git_branch_name) '
+prompt='%F{#88bf6a}%n %U%F{#00afff}%~%u$(git_branch_name)
+> '
 
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
+
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^V' edit-command-line          # enter nvim buffer
+bindkey -M vicmd "^V" edit-command-line # enter nvim buffer in normal mode
 
 # Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?' backward-delete-char
+bindkey -M menuselect '^[[Z' reverse-menu-complete  # shift + tab
+bindkey -v '^?' backward-delete-char                # Fix backspace bug when switching modes
 
 # Change cursor shape for different vi modes.
 function zle-keymap-select {
@@ -104,26 +112,31 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 export ZFUNCTIONS=${ZDOTDIR:-$HOME}/.zfunctions
 [ -d $ZFUNCTIONS ] || mkdir -p $ZFUNCTIONS
 
-source ~/.zsh/aliases.zsh
-
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-ZSH_HIGHLIGHT_STYLES[precommand]='fg=#5f87ff' # sudo
-ZSH_HIGHLIGHT_STYLES[command]='fg=#5f87ff' # ls
-ZSH_HIGHLIGHT_STYLES[alias]='fg=#5f87ff'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=#5f87ff' # fg
-ZSH_HIGHLIGHT_STYLES[function]='fg=#5f87ff'
-ZSH_HIGHLIGHT_STYLES[path]='fg=#00afff,underline' # .zshrc, .config, dev, etc...
-
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '^f' autosuggest-accept
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#585858,underline'
-
 # https://github.com/zsh-users/zsh-autosuggestions/issues/529
 if autoload -U +X add-zle-hook-widget 2>/dev/null; then
     add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_fetch
     add-zle-hook-widget zle-line-pre-redraw _zsh_autosuggest_highlight_apply
 fi
+
+source ~/.zsh/aliases.zsh
+
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+typeset -gA ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_STYLES[precommand]='fg=#5f87ff'                  # sudo
+ZSH_HIGHLIGHT_STYLES[command]='fg=#5f87ff'                     # ls
+ZSH_HIGHLIGHT_STYLES[alias]='fg=#ffaf00'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=#5f87ff'                     # fg
+ZSH_HIGHLIGHT_STYLES[function]='fg=#5f87ff'
+ZSH_HIGHLIGHT_STYLES[path]='fg=#00afff,underline'              # .zshrc, .config, dev, etc...
+# ZSH_HIGHLIGHT_STYLES[path_pathseparator]='fg=#00afff'        # /
+ZSH_HIGHLIGHT_STYLES[path_prefix]='fg=#00afff'
+# ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]='fg=#00afff'
+ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=#ffaf00'           # !!
+
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+bindkey '^f' autosuggest-accept
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#585858,underline'
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH=~/.local/bin:$PATH
