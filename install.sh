@@ -18,7 +18,7 @@ esac
 
 chsh -s "$(command -v zsh)"
 
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 
 stow */
 
