@@ -85,6 +85,7 @@ end
 local installed_languages = { 'tsx' }
 local is_nvim_lsp_installer, nvim_lsp_installer = pcall(require, 'nvim-lsp-installer')
 local is_lspconfig, lspconfig = pcall(require, 'lspconfig')
+local is_lsp_format, lsp_format = pcall(require, 'lsp-format')
 local is_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
 if is_nvim_lsp_installer then
   nvim_lsp_installer.setup()
@@ -93,7 +94,10 @@ if is_nvim_lsp_installer then
     for _, language in pairs(installed_server.languages) do
       table.insert(installed_languages, language)
     end
-    if is_lspconfig and is_cmp_nvim_lsp then
+    if is_lspconfig and is_cmp_nvim_lsp and is_lsp_format then
+      mappings.lsp_format()
+      mappings.nvim_lspconfig()
+      lspconfig.gopls.setup { on_attach = lsp_format.on_attach }
       lspconfig[installed_server.name].setup {
         capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
       }
@@ -141,7 +145,8 @@ if is_nvim_lsp_installer then
       end
 
       lspconfig[installed_server.name].setup {
-        on_attach = mappings.nvim_lspconfig(),
+        on_attach = lsp_format.on_attach,
+        init_options = { documentFormatting = true },
         settings = {
           Lua = lua(),
           yaml = yaml()
@@ -230,13 +235,6 @@ if is_nvim_treesitter_configs then
   }
 end
 
-local is_formatter, formatter = pcall(require, 'formatter')
-if is_formatter then
-  formatter.setup {
-    on_attach = mappings.formatter_nvim()
-  }
-end
-
 local is_gitsigns, gitsigns = pcall(require, 'gitsigns')
 if is_gitsigns then
   gitsigns.setup {
@@ -254,20 +252,20 @@ local is_dap, dap = pcall(require, 'dap')
 if is_dap then
   mappings.nvim_dap()
   dap.defaults.fallback.terminal_win_cmd = '20split new'
-  vim.highlight.create('DapBreakpoint', { ctermbg=0, guifg='#E06C75' }, false)
-  vim.highlight.create('DapBreakpointRejected', { ctermbg=0, guifg='#61afef' }, false)
-  vim.highlight.create('DapStopped', { ctermbg=0, guifg='#E06C75' }, false)
-  vim.fn.sign_define('DapBreakpoint', {text='', texthl='DapBreakpoint', linehl='', numhl='DapBreakpoint'})
-  vim.fn.sign_define('DapBreakpointRejected', {text='', texthl='DapBreakpointRejected', linehl='', numhl='DapBreakpointRejected'})
-  vim.fn.sign_define('DapStopped', {text='卑', texthl='DapStopped', linehl='', numhl='DapStopped'})
+  vim.highlight.create('DapBreakpoint', { ctermbg = 0, guifg = '#E06C75', guibg = 0 }, false)
+  vim.highlight.create('DapBreakpointRejected', { ctermbg = 0, guifg = '#61afef', guibg = 0 }, false)
+  vim.highlight.create('DapStopped', { ctermbg = 0, guifg = '#E06C75', guibg = 0 }, false)
+  vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'DapBreakpoint', linehl = '', numhl = 'DapBreakpoint' })
+  vim.fn.sign_define('DapBreakpointRejected', { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = 'DapBreakpointRejected' })
+  vim.fn.sign_define('DapStopped', { text = '卑', texthl = 'DapStopped', linehl = '', numhl = 'DapStopped' })
 
   local debug_adapters = {
     'microsoft/vscode-node-debug2',
   }
   for _, debug_adapter in ipairs(debug_adapters) do
-    local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/' .. debug_adapter
+    local install_path = vim.fn.stdpath('data') .. '/debug_adapters/' .. debug_adapter
     if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-      vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/' .. debug_adapter, install_path})
+      vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/' .. debug_adapter, install_path })
     end
 
     if debug_adapter == 'microsoft/vscode-node-debug2' then
@@ -278,6 +276,25 @@ if is_dap then
         type = 'executable',
         command = 'node',
         args = { install_path .. '/out/src/nodeDebug.js' }
+      }
+      dap.configurations.javascript = {
+        {
+          name = 'Launch',
+          type = 'node2',
+          request = 'launch',
+          program = '${file}',
+          cwd = vim.fn.getcwd(),
+          sourceMaps = true,
+          protocol = 'inspector',
+          console = 'integratedTerminal',
+        },
+        {
+          -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+          name = 'Attach to process',
+          type = 'node2',
+          request = 'attach',
+          processId = require 'dap.utils'.pick_process,
+        },
       }
     end
   end
@@ -318,8 +335,8 @@ end
 
 local is_colorizer, colorizer = pcall(require, 'colorizer')
 if is_colorizer then
-  colorizer.setup({'*'}, {
+  colorizer.setup({ '*' }, {
     RRGGBBAA = true;
-	  css = true;
+    css = true;
   })
 end

@@ -17,4 +17,4 @@ vim.opt.number = true             -- line numbering
 vim.opt.ignorecase = true         -- search insensitive
 vim.opt.smartcase = true          -- except when inputting uppercase letters
 
-vim.g.netrw_liststyle = 3           -- tree style directories
+vim.g.netrw_liststyle = 3         -- tree style directories

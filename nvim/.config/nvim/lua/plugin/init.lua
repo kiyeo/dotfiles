@@ -1,7 +1,7 @@
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 local packer_bootstrap
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+  packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
   vim.cmd([[packadd packer.nvim]])
 end
 
@@ -28,7 +28,8 @@ packer.startup({
     -- language server protocol
     use {
       'williamboman/nvim-lsp-installer',
-      'neovim/nvim-lspconfig'
+      'neovim/nvim-lspconfig',
+      'lukas-reineke/lsp-format.nvim'
     }
 
     -- snippet engine
@@ -46,8 +47,8 @@ packer.startup({
 
     -- file explorer
     use {
-        'kyazdani42/nvim-tree.lua',
-        requires = 'kyazdani42/nvim-web-devicons' -- file icons
+      'kyazdani42/nvim-tree.lua',
+      requires = 'kyazdani42/nvim-web-devicons' -- file icons
     }
 
     -- open buffer tab style
@@ -72,17 +73,16 @@ packer.startup({
     -- utilities
 
     use {
-      'mfussenegger/nvim-dap',                       -- debugger
-      'theHamsta/nvim-dap-virtual-text'              -- debugger variable virtual text
+      'mfussenegger/nvim-dap',          -- debugger
+      'theHamsta/nvim-dap-virtual-text' -- debugger variable virtual text
     }
 
     use {
-      'mhartington/formatter.nvim',                  -- format code
       'lewis6991/gitsigns.nvim',                     -- git decoration and actions
       'numToStr/Comment.nvim',                       -- comment code
       'JoosepAlviste/nvim-ts-context-commentstring', -- embedded language commenting
       'akinsho/toggleterm.nvim',                     -- terminal
-      'godlygeek/tabular',                           -- column align text. E.g :Tabularize /--
+      'godlygeek/tabular',                           -- column align text. E.g :Tabularize / --
       'norcalli/nvim-colorizer.lua'                  -- color highlighter
     }
 
