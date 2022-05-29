@@ -260,7 +260,7 @@ if is_dap then
   vim.fn.sign_define('DapStopped', { text = '卑', texthl = 'DapStopped', linehl = '', numhl = 'DapStopped' })
 
   local debug_adapters = {
-    'microsoft/vscode-node-debug2',
+    'microsoft/vscode-node-debug2'
   }
   for _, debug_adapter in ipairs(debug_adapters) do
     local install_path = vim.fn.stdpath('data') .. '/debug_adapters/' .. debug_adapter
@@ -271,31 +271,33 @@ if is_dap then
     if debug_adapter == 'microsoft/vscode-node-debug2' then
       if vim.fn.empty(vim.fn.glob(install_path .. '/out/src/')) > 0 then
         vim.cmd('!cd ' .. install_path .. ' && npm install && npm run build')
+      else
+        dap.adapters.node2 = {
+          type = "executable",
+          command = "node",
+          args = { install_path .. "/out/src/nodeDebug.js" }
+        }
+        dap.configurations.typescriptreact = {
+          {
+            name = "Launch",
+            type = "node2",
+            request = "launch",
+            program = '${file}',
+            cwd = vim.fn.getcwd(),
+            sourceMaps = true,
+            protocol = "inspector",
+            console = "integratedTerminal",
+          },
+          {
+            -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+            name = "Attach to process",
+            type = "node2",
+            request = "attach",
+            cwd = vim.fn.getcwd()
+            --processId = require("dap.utils").pick_process,
+          },
+        }
       end
-      dap.adapters.node2 = {
-        type = 'executable',
-        command = 'node',
-        args = { install_path .. '/out/src/nodeDebug.js' }
-      }
-      dap.configurations.javascript = {
-        {
-          name = 'Launch',
-          type = 'node2',
-          request = 'launch',
-          program = '${file}',
-          cwd = vim.fn.getcwd(),
-          sourceMaps = true,
-          protocol = 'inspector',
-          console = 'integratedTerminal',
-        },
-        {
-          -- For this to work you need to make sure the node process is started with the `--inspect` flag.
-          name = 'Attach to process',
-          type = 'node2',
-          request = 'attach',
-          processId = require 'dap.utils'.pick_process,
-        },
-      }
     end
   end
 end

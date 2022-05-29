@@ -6,6 +6,7 @@ os_type="$(uname -s)"
 
 apt_packages="zsh stow git neovim ripgrep"
 brew_packages="zsh stow git neovim ripgrep"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 case "$os_type" in
   Linux*)
