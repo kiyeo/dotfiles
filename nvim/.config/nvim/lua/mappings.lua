@@ -14,9 +14,9 @@ vim.keymap.set({ 'n', 't' }, '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Exit termin
 vim.keymap.set({ 'n', 't' }, '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Exit terminal mode and move to right window' })
 vim.keymap.set({ 'n', 't' }, '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Exit terminal mode and move to above window' })
 
-vim.keymap.set('n', '<C-h>', ':bnext<CR>', { desc = 'Press Tab to move to the next buffer' })
-vim.keymap.set('n', '<C-l>', ':bprevious<CR>', { desc = 'Press Shift + Tab to move to the previous buffer' })
-vim.keymap.set('n', '<Leader>w', ':bp | :bd #<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + w to delete the current buffer' })
+vim.keymap.set('n', 'K', ':bnext<CR>', { desc = 'Press K to move to the next buffer' })
+vim.keymap.set('n', 'J', ':bprevious<CR>', { desc = 'Press J to move to the previous buffer' })
+vim.keymap.set('n', '<Leader>w', '<C-o>:bd #<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + w to delete the current buffer' })
 vim.keymap.set('t', '<A-w>', '<C-\\><C-n>:bdelete!<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + w to exit terminal mode and delete the buffer' })
 vim.keymap.set('n', '<Leader>e', ':Lexplore 30<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + e to open Netrw' })
 

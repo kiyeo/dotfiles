@@ -4,8 +4,8 @@ set -e
 
 os_type="$(uname -s)"
 
-apt_packages="zsh stow git neovim ripgrep"
-brew_packages="zsh stow git neovim ripgrep"
+apt_packages="zsh stow git neovim ripgrep zoxide clang"
+brew_packages="zsh stow git neovim ripgrep zoxide clang"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 case "$os_type" in

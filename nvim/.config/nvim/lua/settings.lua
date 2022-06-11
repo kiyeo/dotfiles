@@ -2,7 +2,6 @@ vim.opt.termguicolors = true      -- Enables 24-bit RGB color in the |TUI|
 vim.opt.mouse = 'a'               -- enable mouse
 vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
 vim.opt.cursorline = true         -- highlight the text line of the cursor
-vim.opt.cmdheight = 2             -- height for the command line messages
 vim.opt.hidden = true             -- enable hidden files
 vim.wo.wrap = false               -- display long lines as just one line
 vim.opt.signcolumn = "yes"        -- always show shift column
