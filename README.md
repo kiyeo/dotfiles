@@ -3,12 +3,13 @@
 ![NeoVim](https://img.shields.io/badge/NeoVim-302d41?style=for-the-badge&logo=neovim)
 ![Lua](https://img.shields.io/badge/Lua-302d41?style=for-the-badge&logo=lua&logoColor=0062cc)
 ![Bash](https://img.shields.io/badge/Bash-302d41?style=for-the-badge&logo=gnu-bash)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-302d41?style=for-the-badge&logo=ubuntu)
+![Gentoo](https://img.shields.io/badge/Gentoo-302d41?style=for-the-badge&logo=gentoo)
+
+`Warning: Don’t blindly use my settings unless you know what that entails. Use at your own risk!`
 
 ```
-git clone https://github.com/Kiyeo/dotfiles.git &&
-  cd dotfiles &&
-  ./install.sh &&
-  zsh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/kiyeo/dotfiles/main/install.sh)"
 ```
 ### ⬆️ Submodule updates
 ```
@@ -30,5 +31,3 @@ unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
 chmod +x /tmp/win32yank.exe
 sudo mv /tmp/win32yank.exe /usr/local/bin
 ```
-
-`Warning: Don’t blindly use my settings unless you know what that entails. Use at your own risk!`
