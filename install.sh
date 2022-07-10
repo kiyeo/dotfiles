@@ -4,7 +4,7 @@ set -e
 
 os_type="$(uname -s)"
 
-emerge_packages="dev-vcs/git app-shells/zsh app-admin/stow app-editors/neovim sys-apps/ripgrep app-shells/zoxide sys-process/htop app-misc/neofetch x11-misc/xclip"
+emerge_packages="x11-misc/picom x11-apps/xsetroot x11-misc/xclip media-gfx/feh media-plugins/alsa-plugins media-sound/alsa-utils app-shells/zsh dev-vcs/git app-admin/stow app-editors/neovim sys-apps/ripgrep app-shells/zoxide sys-process/htop app-misc/neofetch"
 apt_packages="git zsh stow neovim ripgrep zoxide gcc"
 brew_packages="git zsh stow neovim ripgrep zoxide gcc"
 
@@ -29,6 +29,7 @@ esac
 
 chsh -s "$(command -v zsh)"
 
+wget -NP ~/.local/share/fonts/ 'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf'
 curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 . $NVM_DIR/nvm.sh
 nvm install node
