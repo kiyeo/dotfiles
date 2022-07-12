@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e 
+
+battery="BAT0";
+battery_dir="/sys/class/power_supply/$battery"
+
+graphics_card_type="intel_backlight"
+graphics_card_type_dir="/sys/class/backlight/$graphics_card_type"
+
+get_sound() {
+  local sound=$(awk -F"[][]" '/Left:/ { print $2 }' <(amixer sget Master))
+  local is_mute=$(awk -F"[][]" '/Left:/ { print $4 }' <(amixer sget Master))
+  if [[ "$is_mute" == "off" ]]; then
+    echo "遼$sound "
+  else
+    echo "蓼$sound "
+  fi
+}
+
+get_brightness() {
+  if [ -d "$graphics_card_type_dir" ]; then
+    local max_brightness=$(cat "$graphics_card_type_dir/max_brightness")
+    local brightness=$(cat "$graphics_card_type_dir/brightness")
+    local percentage=$(awk -v max="$max_brightness" -v curr="$brightness" 'BEGIN{printf("%.0f\n",curr/max*100)}')
+    echo "ﯦ$percentage% "
+  fi
+}
+
+get_battery() {
+  if [ -d "$battery_dir" ]; then
+    local battery_status="$(grep -oP "POWER_SUPPLY_STATUS=\K\w+" $battery_dir/uevent)"
+    case "$battery_status" in
+      Discharging)
+        echo "$(cat "$battery_dir/capacity")% "
+        ;;
+      Charging)
+        echo "$(cat "$battery_dir/capacity")% "
+        ;;
+    esac
+  fi
+}
+
+while true; do
+  xsetroot -name " $(get_sound)$(get_brightness)$(get_battery)$(date "+%r %a %d %b %Y") "
+  sleep 0.2
+done
