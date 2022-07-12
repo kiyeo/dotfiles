@@ -6,6 +6,8 @@
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-302d41?style=for-the-badge&logo=ubuntu)
 ![Gentoo](https://img.shields.io/badge/Gentoo-302d41?style=for-the-badge&logo=gentoo)
 
+![preview](./.preview.png)
+
 `Warning: Don’t blindly use my settings unless you know what that entails. Use at your own risk!`
 
 ```
