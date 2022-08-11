@@ -1,3 +1,3 @@
-require 'settings'
-require 'mappings'
-require 'plugin'
+require('settings')
+require('mappings')
+require('plugin')

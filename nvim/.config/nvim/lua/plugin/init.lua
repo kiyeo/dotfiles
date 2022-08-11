@@ -1,7 +1,8 @@
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 local packer_bootstrap
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+  packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
+    install_path })
   vim.cmd([[packadd packer.nvim]])
 end
 
@@ -22,13 +23,14 @@ packer.startup({
     use 'wbthomason/packer.nvim'
 
     -- colorscheme
-    use "rmehri01/onenord.nvim"     -- main theme
+    use "rmehri01/onenord.nvim" -- main theme
     use 'nvim-lualine/lualine.nvim' -- statusline
 
     -- language server protocol
     use {
-      'williamboman/nvim-lsp-installer',
       'neovim/nvim-lspconfig',
+      'williamboman/mason.nvim', -- manage LSP servers, DAP servers, linters, and formatters
+      'williamboman/mason-lspconfig.nvim', -- extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
       'lukas-reineke/lsp-format.nvim'
     }
 
@@ -73,17 +75,17 @@ packer.startup({
     -- utilities
 
     use {
-      'mfussenegger/nvim-dap',          -- debugger
+      'mfussenegger/nvim-dap', -- debugger
       'theHamsta/nvim-dap-virtual-text' -- debugger variable virtual text
     }
 
     use {
-      'lewis6991/gitsigns.nvim',                     -- git decoration and actions
-      'numToStr/Comment.nvim',                       -- comment code
+      'lewis6991/gitsigns.nvim', -- git decoration and actions
+      'numToStr/Comment.nvim', -- comment code
       'JoosepAlviste/nvim-ts-context-commentstring', -- embedded language commenting
-      'akinsho/toggleterm.nvim',                     -- terminal
-      'godlygeek/tabular',                           -- column align text. E.g :Tabularize / --
-      'norcalli/nvim-colorizer.lua'                  -- color highlighter
+      'akinsho/toggleterm.nvim', -- terminal
+      'godlygeek/tabular', -- column align text. E.g :Tabularize /--
+      'norcalli/nvim-colorizer.lua' -- color highlighter
     }
 
     if packer_bootstrap then
@@ -96,4 +98,7 @@ packer.startup({
 })
 
 pcall(vim.cmd, 'source' .. config_compile_path)
-require 'plugin.settings'
+require('plugin.settings')
+require('plugin.lsp_config')
+require('plugin.cmp').cmp()
+require('plugin.dap')
