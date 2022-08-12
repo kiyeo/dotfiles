@@ -83,7 +83,7 @@ end
 local is_nvim_treesitter_configs, nvim_treesitter_configs = pcall(require, 'nvim-treesitter.configs')
 if is_nvim_treesitter_configs then
   nvim_treesitter_configs.setup({
-    ensure_installed = { 'javascript', 'typescript', 'lua', 'bash', 'yaml' },
+    ensure_installed = require('plugin.lsp_config').lsp_languages,
     highlight = {
       enable = true
     },

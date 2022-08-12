@@ -20,7 +20,7 @@ packer.init({
 
 packer.startup({
   function(use)
-    use 'wbthomason/packer.nvim'
+    use 'wbthomason/packer.nvim' -- package manager
 
     -- colorscheme
     use "rmehri01/onenord.nvim" -- main theme
@@ -28,10 +28,16 @@ packer.startup({
 
     -- language server protocol
     use {
-      'neovim/nvim-lspconfig',
+      'neovim/nvim-lspconfig', -- configurations for Nvim LSP
       'williamboman/mason.nvim', -- manage LSP servers, DAP servers, linters, and formatters
       'williamboman/mason-lspconfig.nvim', -- extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
       'lukas-reineke/lsp-format.nvim'
+    }
+
+    -- parser generator tool and an incremental parsing library
+    use {
+      'nvim-treesitter/nvim-treesitter',
+      run = function() vim.cmd(':TSUpdate') end
     }
 
     -- snippet engine
@@ -66,12 +72,6 @@ packer.startup({
       requires = 'nvim-lua/plenary.nvim'
     }
 
-    -- parser generator tool and an incremental parsing library
-    use {
-      'nvim-treesitter/nvim-treesitter',
-      run = function() vim.cmd(':TSUpdate') end
-    }
-
     -- utilities
 
     use {
@@ -99,6 +99,6 @@ packer.startup({
 
 pcall(vim.cmd, 'source' .. config_compile_path)
 require('plugin.settings')
-require('plugin.lsp_config')
+require('plugin.lsp_config').mason_lspconfig()
 require('plugin.cmp').cmp()
 require('plugin.dap')
