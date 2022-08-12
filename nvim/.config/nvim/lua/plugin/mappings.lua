@@ -96,12 +96,12 @@ function M.nvim_dap(dap)
     { desc = 'nvim-dap - Press "' .. vim.g.mapleader .. '" + l + p to log message and set_breakpoint.' })
   vim.keymap.set('n', '<A-h>', ':DapContinue<CR>',
     { desc = 'nvim-dap - Press Alt + h to resume the execution of an application if a debug session is active and a thread was stopped.' })
-  vim.keymap.set('n', '<A-j>', ':DapStepInto<CR>',
-    { desc = 'nvim-dap - Press Alt + j to request the debugee to step into a function or method if possible.' })
-  vim.keymap.set('n', '<A-k>', ':DapStepOver<CR>',
-    { desc = 'nvim-dap - Press Alt + k to request the debugee to run again for one step.' })
+  vim.keymap.set('n', '<A-j>', ':DapStepOver<CR>',
+    { desc = 'nvim-dap - Press Alt + j to request the debugee to step over a function or method.' })
+  vim.keymap.set('n', '<A-k>', ':DapStepInto<CR>',
+    { desc = 'nvim-dap - Press Alt + k to request the debugee to step into a function or method.' })
   vim.keymap.set('n', '<A-l>', ':DapStepOut<CR>',
-    { desc = 'nvim-dap -  Press Alt + l to request the debugee to step out of a function or method if possible.' })
+    { desc = 'nvim-dap -  Press Alt + l to request the debugee to step out of a function or method.' })
   vim.keymap.set('n', '<leader>ds',
     ':lua local widgets=require("dap.ui.widgets");widgets.centered_float(widgets.scopes)<CR>')
   vim.keymap.set({ 'n', 'v' }, '<leader>dh', ':lua require("dap.ui.widgets").hover()<CR>')
