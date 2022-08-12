@@ -25,7 +25,7 @@ if is_nvim_tree then
     view = {
       width = 35,
       mappings = {
-        list = mappings.nvim_tree(nvim_tree)
+        list = mappings.nvim_tree()
       }
     },
     renderer = {

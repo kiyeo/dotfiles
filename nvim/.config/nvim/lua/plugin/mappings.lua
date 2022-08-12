@@ -38,8 +38,10 @@ function M.nvim_cmp(cmp)
   };
 end
 
-function M.nvim_tree(nvim_tree)
-  vim.keymap.set('n', '<Leader>e', nvim_tree.toggle,
+function M.nvim_tree()
+  vim.keymap.set('n', '<Leader>e', ':NvimTreeToggle <CR>',
+    { desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "' .. vim.g.mapleader .. '" to fuzzy find files' })
+  vim.keymap.set('n', '<Leader>fe', ':NvimTreeFindFile<CR>',
     { desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "' .. vim.g.mapleader .. '" to fuzzy find files' })
 end
 
@@ -100,9 +102,9 @@ function M.nvim_dap(dap)
     { desc = 'nvim-dap - Press Alt + k to request the debugee to run again for one step.' })
   vim.keymap.set('n', '<A-l>', ':DapStepOut<CR>',
     { desc = 'nvim-dap -  Press Alt + l to request the debugee to step out of a function or method if possible.' })
-  vim.keymap.set('n', '<leader>ds', ':lua require"dap.ui.widgets".scopes()<CR>')
-  vim.keymap.set('n', '<leader>dh', ':lua require"dap.ui.widgets".hover()<CR>')
-  vim.keymap.set('v', '<leader>dh', ':lua require"dap.ui.widgets".visual_hover()<CR>')
+  vim.keymap.set('n', '<leader>ds',
+    ':lua local widgets=require("dap.ui.widgets");widgets.centered_float(widgets.scopes)<CR>')
+  vim.keymap.set({ 'n', 'v' }, '<leader>dh', ':lua require("dap.ui.widgets").hover()<CR>')
   vim.keymap.set('n', '<Leader>dr', ':DapToggleRepl<CR>',
     { desc = 'nvim-dap - Press "' ..
         vim.g.mapleader .. '" + d + r to opens the REPL if it is closed, otherwise closes it.' })

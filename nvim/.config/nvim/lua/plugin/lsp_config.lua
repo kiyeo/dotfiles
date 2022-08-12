@@ -28,6 +28,7 @@ function M.mason_lspconfig()
     return
   end
   mason.setup()
+  mason_lspconfig.setup()
 
   local is_lsp_format, lsp_format = pcall(require, 'lsp-format')
   if is_lsp_format then
