@@ -43,6 +43,6 @@ fi
 
 git submodule update --init --recursive --remote
 
-stow */
+stow --no-folding */
 
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' # https://github.com/wbthomason/packer.nvim/issues/502
