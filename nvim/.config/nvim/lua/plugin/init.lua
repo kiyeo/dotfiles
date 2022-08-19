@@ -50,7 +50,8 @@ packer.startup({
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'David-Kunz/cmp-npm'
+      'David-Kunz/cmp-npm',
+      'hrsh7th/cmp-nvim-lua' -- lua vim.lsp.* API completion
     }
 
     -- file explorer
@@ -101,4 +102,4 @@ pcall(vim.cmd, 'source' .. config_compile_path)
 require('plugin.settings')
 require('plugin.lsp_config').mason_lspconfig()
 require('plugin.cmp').cmp()
-require('plugin.dap')
+require('plugin.dap').dap_configuration()

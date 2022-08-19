@@ -18,6 +18,10 @@ function M.nvim_lspconfig(bufnr)
     { desc = 'lsp-format.nvim - Press g + a for code actions', buffer = bufnr })
   vim.keymap.set('n', 'gl', vim.diagnostic.open_float,
     { desc = 'nvim-lspconfig - Press g + l to open diagnostic', buffer = bufnr })
+  vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next,
+    { desc = 'nvim-lspconfig - Press ctrl + n to go to next diagnostic', buffer = bufnr })
+  vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev,
+    { desc = 'nvim-lspconfig - Press ctrl + p to go to previous diagnostic', buffer = bufnr })
 end
 
 function M.nvim_cmp(cmp)
@@ -115,7 +119,7 @@ function M.nvim_dap(dap)
     { desc = 'nvim-dap - Press "' .. vim.g.mapleader .. '" + d + k to go up in current stacktrace without stepping.' })
   vim.keymap.set('n', '<leader>dj', function() dap.down() end,
     { desc = 'nvim-dap - Press "' .. vim.g.mapleader .. '" + d + j to go down in current stacktrace without stepping.' })
-  vim.keymap.set('n', '<leader>da', function() dap.attach() end,
+  vim.keymap.set('n', '<leader>da', function() require('plugin.dap').dap_attach_debugger(dap) end,
     { desc = 'nvim-dap - Press "' ..
         vim.g.mapleader ..
         '" d + a to attach a running debug adapter and then initialize it with the given dap-configuration.' })

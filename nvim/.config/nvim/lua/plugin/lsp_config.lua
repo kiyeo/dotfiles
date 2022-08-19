@@ -91,14 +91,6 @@ function M.mason_lspconfig()
       end
     end
 
-    local function typescriptHandler()
-      if installed_server == 'tsserver' then
-        return {
-          ['textDocument/publishDiagnostics'] = function() end
-        }
-      end
-    end
-
     local function cmp_nvim_lsp_capabilities()
       if is_cmp_nvim_lsp then
         return cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -112,8 +104,7 @@ function M.mason_lspconfig()
       settings = {
         Lua = lua(),
         yaml = yaml(),
-      },
-      handlers = typescriptHandler()
+      }
     })
   end
 end
