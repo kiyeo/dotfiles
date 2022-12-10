@@ -92,6 +92,12 @@ end
 function M.nvim_dap(dap)
   vim.keymap.set('n', '<Leader>db', ':DapToggleBreakpoint<CR>',
     { desc = 'nvim-dap - Press "' .. vim.g.mapleader .. '" + d + b to create or remove a breakpoint at the current line.' })
+  vim.keymap.set('n', '<Leader>dlb', function() dap.list_breakpoints() end,
+    { desc = 'nvim-dap - Press "' ..
+        vim.g.mapleader .. '" + d + l + b to list all breakpoints.' })
+  vim.keymap.set('n', '<Leader>dcb', function() dap.clear_breakpoints() end,
+    { desc = 'nvim-dap - Press "' ..
+        vim.g.mapleader .. '" + d + l + b to clear all breakpoints.' })
   vim.keymap.set('n', '<Leader>dB', function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,
     { desc = 'nvim-dap - Press "' ..
         vim.g.mapleader ..

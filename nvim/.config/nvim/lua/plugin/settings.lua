@@ -15,7 +15,11 @@ end
 
 local is_lualine, lualine = pcall(require, 'lualine')
 if is_lualine then
-  lualine.setup()
+  lualine.setup({
+    options = {
+      theme = 'onenord'
+    }
+  })
 end
 
 local is_nvim_tree, nvim_tree = pcall(require, 'nvim-tree')
@@ -53,16 +57,16 @@ if is_bufferline then
     },
     highlights = {
       buffer_selected = {
-        gui = "bold"
+        bold = true
       },
       duplicate_selected = {
-        gui = "bold"
+        bold = true
       },
       duplicate_visible = {
-        gui = "bold"
+        bold = true
       },
       duplicate = {
-        gui = "bold"
+        bold = true
       },
     }
   })

@@ -16,7 +16,8 @@ M.lsp_languages = {
   'rust',
   'toml',
   'typescript',
-  'yaml'
+  'yaml',
+  'java'
 }
 
 function M.mason_lspconfig()
@@ -39,9 +40,9 @@ function M.mason_lspconfig()
   for _, installed_server in pairs(installed_servers) do
     local on_attach = function(client, bufnr)
       if installed_server == 'tsserver' then
-        client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.documentFormattingProvider = false
       else
-        client.resolved_capabilities.document_formatting = true
+        client.server_capabilities.documentFormattingProvider = true
       end
       if is_lsp_format then
         lsp_format.on_attach(client)
@@ -91,9 +92,25 @@ function M.mason_lspconfig()
       end
     end
 
+    local function java()
+      if installed_server == 'jdtls' then
+        return {
+          configuration = {
+            runtimes = {
+              {
+                name = "JavaSE-17",
+                path = "/usr/lib/jvm/java-17-openjdk-amd64/",
+              }
+            }
+          }
+        }
+
+      end
+    end
+
     local function cmp_nvim_lsp_capabilities()
       if is_cmp_nvim_lsp then
-        return cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+        return cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
       end
     end
 
@@ -104,6 +121,7 @@ function M.mason_lspconfig()
       settings = {
         Lua = lua(),
         yaml = yaml(),
+        java = java()
       }
     })
   end

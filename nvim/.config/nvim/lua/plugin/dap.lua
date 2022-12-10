@@ -11,9 +11,9 @@ function M.dap_configuration()
     end
     mappings.nvim_dap(dap)
     dap.defaults.fallback.terminal_win_cmd = '20split new'
-    vim.highlight.create('DapBreakpoint', { ctermbg = 0, guifg = '#E06C75', guibg = 0 }, false)
-    vim.highlight.create('DapBreakpointRejected', { ctermbg = 0, guifg = '#ffaf00', guibg = 0 }, false)
-    vim.highlight.create('DapStopped', { ctermbg = 0, guifg = '#88bf6a', guibg = 0 }, false)
+    vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#E06C75', bg = 0 })
+    vim.api.nvim_set_hl(0, 'DapBreakpointRejected', { ctermbg = 0, fg = '#ffaf00', bg = 0 })
+    vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#88bf6a', bg = 0 })
     vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'DapBreakpoint', linehl = '', numhl = 'DapBreakpoint' })
     vim.fn.sign_define('DapBreakpointRejected',
       { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = 'DapBreakpointRejected' })
@@ -60,9 +60,28 @@ function M.dap_configuration()
         cwd = vim.fn.getcwd(),
         sourceMaps = true,
         protocol = 'inspector',
-        console = 'integratedTerminal'
+        skipFiles = { "<node_internals>/**", "node_modules" }
       }
     }
+    dap.configurations.java = {
+      {
+        type = 'java';
+        request = 'attach';
+        name = "Debug (Attach) - Remote";
+        hostName = "127.0.0.1";
+        port = 5005;
+      },
+    }
+    dap.adapters.java = function(callback)
+      -- FIXME:
+      -- Here a function needs to trigger the `vscode.java.startDebugSession` LSP command
+      -- The response to the command must be the `port` used below
+      callback({
+        type = 'server';
+        host = '127.0.0.1';
+        port = 5005;
+      })
+    end
   end
 end
 
@@ -75,36 +94,38 @@ function M.dap_attach_debugger(dap)
       if user_input == 'q' or user_input == 'Q' then
         return
       end
+      if user_input == 'java' then
+        -- require('jdtls').setup_dap({ hotcodereplace = 'auto' })
+        -- require('jdtls.dap').setup_dap_main_class_configs()
+        dap.run({
+          type = 'java';
+          request = 'attach';
+          name = "Debug (Attach) - Remote";
+          hostName = "127.0.0.1";
+          port = 5005;
+        })
+      end
+      local npm_7 = '--node-options=--inspect'
+      local npm_6 = '--node-arg=--inspect'
+      type = 'node2'
       if current_file == 'package.json' or user_input == 'node2' then
-        type = 'node2'
-        -- '  "test": "npm run test-backend && npm run test-frontend",' will output 'test'
         local npm_script = string.match(vim.api.nvim_get_current_line(), '^%s*"(.*)":')
-        -- run on script line in package.json. E.g. "test": "npm run test-backend && npm run test-frontend"
-        require('toggleterm').exec_command('cmd="npm --node-options --inspect run ' .. npm_script .. '"')
-      elseif current_file == string.match(current_file, '.*%.test%..*js$') or
-          current_file == string.match(current_file, '.*%.spec%..*js$') or
+        require('toggleterm').exec_command('cmd="npm ' .. npm_7 .. ' run ' .. npm_script .. '"')
+      elseif current_file == string.match(current_file, '.*%.test%..*$') or
+          current_file == string.match(current_file, '.*%.spec%..*$') or
           user_input == 'jest' then
-        type = 'node2'
-        -- "   it('will test something', () => {})" will output "will test something"
         local jest_test = string.match(vim.api.nvim_get_current_line(), '^%s*.*"(.*)",')
-        -- run on describe or it line. E.g. it('will test something', () => {})
-        require('toggleterm').exec_command([[cmd='npx --node-arg=--inspect jest -i % -t "]] .. jest_test .. [["']])
+        require('toggleterm').exec_command([[cmd='npx ]] .. npm_7 .. [[ jest -i % -t "]] .. jest_test .. [["']])
       elseif current_file == string.match(current_file, '^test-.*$') or user_input == 'mocha' then
-        type = 'node2'
-        -- "   it('will test something', () => {})" will output "will test something"
         local mocha_test = string.match(vim.api.nvim_get_current_line(), '^%s*.*"(.*)",')
         vim.ui.input({ prompt = 'Enter npm mocha script to attach to: ' }, function(mocha_script)
-          -- run on describe or it line. E.g. it('will test something', () => {})
-          require('toggleterm').exec_command([[cmd='npm --node-options --inspect run ]] ..
+          require('toggleterm').exec_command([[cmd='npm ]] .. npm_7 .. [[ run ]] ..
             mocha_script .. [[ -- --grep "]] .. mocha_test .. [["']])
         end
         )
       elseif current_file == string.match(current_file, '.*%.feature$') or user_input == 'cucumber' then
-        type = 'node2'
-        -- "   Scenario: Do something" will output "Do something"
         local cucumber_scenario = string.match(vim.api.nvim_get_current_line(), '^%s*.*: (.*)$')
-        -- run on describe or it line. E.g. Scenario: Do something
-        require('toggleterm').exec_command([[cmd='npx --node-arg=--inspect cucumber-js --name "]] ..
+        require('toggleterm').exec_command([[cmd='npx ]] .. npm_7 .. [[ cucumber-js --name "]] ..
           cucumber_scenario .. [["']])
       else
         type = user_input
@@ -114,7 +135,8 @@ function M.dap_attach_debugger(dap)
         request = 'attach',
         cwd = vim.fn.getcwd(),
         sourceMaps = true,
-        protocol = 'inspector'
+        protocol = 'inspector',
+        skipFiles = { "<node_internals>/**", "node_modules" }
       })
     end
   )

@@ -31,7 +31,8 @@ packer.startup({
       'neovim/nvim-lspconfig', -- configurations for Nvim LSP
       'williamboman/mason.nvim', -- manage LSP servers, DAP servers, linters, and formatters
       'williamboman/mason-lspconfig.nvim', -- extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
-      'lukas-reineke/lsp-format.nvim'
+      'lukas-reineke/lsp-format.nvim',
+      'mfussenegger/nvim-jdtls' -- extensions for the built-in Language Server Protocol support in Neovim (>= 0.6.0) for eclipse.jdt.ls.
     }
 
     -- parser generator tool and an incremental parsing library
@@ -77,7 +78,8 @@ packer.startup({
 
     use {
       'mfussenegger/nvim-dap', -- debugger
-      'theHamsta/nvim-dap-virtual-text' -- debugger variable virtual text
+      'theHamsta/nvim-dap-virtual-text', -- debugger variable virtual text
+      'microsoft/java-debug' -- The Java Debug Server is an implementation of Visual Studio Code (VSCode) Debug Protocol
     }
 
     use {
