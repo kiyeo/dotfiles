@@ -11,9 +11,9 @@ function M.dap_configuration()
     end
     mappings.nvim_dap(dap)
     dap.defaults.fallback.terminal_win_cmd = '20split new'
-    vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#E06C75', bg = 0 })
-    vim.api.nvim_set_hl(0, 'DapBreakpointRejected', { ctermbg = 0, fg = '#ffaf00', bg = 0 })
-    vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#88bf6a', bg = 0 })
+    vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#E06C75' })
+    vim.api.nvim_set_hl(0, 'DapBreakpointRejected', { ctermbg = 0, fg = '#ffaf00' })
+    vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#88bf6a' })
     vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'DapBreakpoint', linehl = '', numhl = 'DapBreakpoint' })
     vim.fn.sign_define('DapBreakpointRejected',
       { text = '', texthl = 'DapBreakpointRejected', linehl = '', numhl = 'DapBreakpointRejected' })

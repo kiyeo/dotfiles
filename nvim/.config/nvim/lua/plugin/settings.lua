@@ -13,13 +13,10 @@ if is_colorscheme then
   })
 end
 
+-- autocmd
 local is_lualine, lualine = pcall(require, 'lualine')
 if is_lualine then
-  lualine.setup({
-    options = {
-      theme = 'onenord'
-    }
-  })
+  lualine.setup()
 end
 
 local is_nvim_tree, nvim_tree = pcall(require, 'nvim-tree')

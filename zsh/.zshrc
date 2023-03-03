@@ -150,3 +150,10 @@ export NVM_DIR="$HOME/.nvm"
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+
+# bun completions
+[ -s "/home/leo/.bun/_bun" ] && source "/home/leo/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
