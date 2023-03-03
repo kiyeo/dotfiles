@@ -29,7 +29,7 @@ esac
 
 chsh -s "$(command -v zsh)"
 
-wget -P ~/.local/share/fonts/ 'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf'
+wget -NP ~/.local/share/fonts/ 'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf'
 curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 . $NVM_DIR/nvm.sh
 nvm install node

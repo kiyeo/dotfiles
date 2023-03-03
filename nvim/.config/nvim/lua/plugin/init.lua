@@ -1,7 +1,8 @@
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 local packer_bootstrap
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+  packer_bootstrap = vim.fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
+    install_path })
   vim.cmd([[packadd packer.nvim]])
 end
 
@@ -19,17 +20,25 @@ packer.init({
 
 packer.startup({
   function(use)
-    use 'wbthomason/packer.nvim'
+    use 'wbthomason/packer.nvim' -- package manager
 
     -- colorscheme
-    use "rmehri01/onenord.nvim"     -- main theme
+    use "rmehri01/onenord.nvim" -- main theme
     use 'nvim-lualine/lualine.nvim' -- statusline
 
     -- language server protocol
     use {
-      'williamboman/nvim-lsp-installer',
-      'neovim/nvim-lspconfig',
-      'lukas-reineke/lsp-format.nvim'
+      'neovim/nvim-lspconfig', -- configurations for Nvim LSP
+      'williamboman/mason.nvim', -- manage LSP servers, DAP servers, linters, and formatters
+      'williamboman/mason-lspconfig.nvim', -- extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
+      'lukas-reineke/lsp-format.nvim',
+      'mfussenegger/nvim-jdtls' -- extensions for the built-in Language Server Protocol support in Neovim (>= 0.6.0) for eclipse.jdt.ls.
+    }
+
+    -- parser generator tool and an incremental parsing library
+    use {
+      'nvim-treesitter/nvim-treesitter',
+      run = function() vim.cmd(':TSUpdate') end
     }
 
     -- snippet engine
@@ -42,7 +51,8 @@ packer.startup({
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'David-Kunz/cmp-npm'
+      'David-Kunz/cmp-npm',
+      'hrsh7th/cmp-nvim-lua' -- lua vim.lsp.* API completion
     }
 
     -- file explorer
@@ -64,26 +74,21 @@ packer.startup({
       requires = 'nvim-lua/plenary.nvim'
     }
 
-    -- parser generator tool and an incremental parsing library
-    use {
-      'nvim-treesitter/nvim-treesitter',
-      run = function() vim.cmd(':TSUpdate') end
-    }
-
     -- utilities
 
     use {
-      'mfussenegger/nvim-dap',          -- debugger
-      'theHamsta/nvim-dap-virtual-text' -- debugger variable virtual text
+      'mfussenegger/nvim-dap', -- debugger
+      'theHamsta/nvim-dap-virtual-text', -- debugger variable virtual text
+      'microsoft/java-debug' -- The Java Debug Server is an implementation of Visual Studio Code (VSCode) Debug Protocol
     }
 
     use {
-      'lewis6991/gitsigns.nvim',                     -- git decoration and actions
-      'numToStr/Comment.nvim',                       -- comment code
+      'lewis6991/gitsigns.nvim', -- git decoration and actions
+      'numToStr/Comment.nvim', -- comment code
       'JoosepAlviste/nvim-ts-context-commentstring', -- embedded language commenting
-      'akinsho/toggleterm.nvim',                     -- terminal
-      'godlygeek/tabular',                           -- column align text. E.g :Tabularize / --
-      'norcalli/nvim-colorizer.lua'                  -- color highlighter
+      'akinsho/toggleterm.nvim', -- terminal
+      'godlygeek/tabular', -- column align text. E.g :Tabularize /--
+      'norcalli/nvim-colorizer.lua' -- color highlighter
     }
 
     if packer_bootstrap then
@@ -96,4 +101,7 @@ packer.startup({
 })
 
 pcall(vim.cmd, 'source' .. config_compile_path)
-require 'plugin.settings'
+require('plugin.settings')
+require('plugin.lsp_config').mason_lspconfig()
+require('plugin.cmp').cmp()
+require('plugin.dap').dap_configuration()
