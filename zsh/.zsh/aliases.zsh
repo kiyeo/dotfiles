@@ -12,6 +12,7 @@ alias dev='cd ~/dev'
 
 alias v='nvim'
 
+alias python=/usr/bin/python3.9
 alias py2='python2'
 alias py3='python3'
 
