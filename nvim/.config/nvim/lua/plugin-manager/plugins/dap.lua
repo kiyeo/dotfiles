@@ -3,6 +3,7 @@ return {
   dependencies = {
     'theHamsta/nvim-dap-virtual-text', -- debugger variable virtual text
     'microsoft/java-debug',            -- The Java Debug Server is an implementation of Visual Studio Code (VSCode) Debug Protocol
+    'akinsho/toggleterm.nvim'
   },
   opts = {
     mappings = function()
@@ -203,6 +204,25 @@ return {
         protocol = 'inspector',
         skipFiles = { "<node_internals>/**", "node_modules" }
       }
+    }
+    dap.configurations.javascript = {
+      {
+        name = 'Launch',
+        type = 'node2',
+        request = 'launch',
+        program = '${file}',
+        cwd = vim.fn.getcwd(),
+        sourceMaps = true,
+        protocol = 'inspector',
+        console = 'integratedTerminal',
+      },
+      {
+        -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+        name = 'Attach to process',
+        type = 'node2',
+        request = 'attach',
+        processId = require 'dap.utils'.pick_process,
+      },
     }
     dap.configurations.java = {
       {

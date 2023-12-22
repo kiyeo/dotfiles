@@ -1,11 +1,19 @@
 return {
   -- language server protocol
   'neovim/nvim-lspconfig', -- configurations for Nvim LSP
+  event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     "williamboman/mason.nvim",
     'williamboman/mason-lspconfig.nvim', -- extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
     'lukas-reineke/lsp-format.nvim',
     'hrsh7th/cmp-nvim-lsp',
+  },
+  keys = {
+    { '<Leader>F', vim.lsp.buf.formatting,    desc = 'lsp-format.nvim - Press "' .. vim.g.mapleader .. '" + F to format file' },
+    { "ga",        vim.lsp.buf.code_action,   desc = 'lsp-format.nvim - Press g + a for code actions' },
+    { 'gl',        vim.diagnostic.open_float, desc = 'nvim-lspconfig - Press g + l to open diagnostic' },
+    { '<C-n>',     vim.diagnostic.goto_next,  desc = 'nvim-lspconfig - Press ctrl + n to go to next diagnostic' },
+    { '<C-p>',     vim.diagnostic.goto_prev,  desc = 'nvim-lspconfig - Press ctrl + p to go to previous diagnostic' }
   },
   opts = {
     on_attach = function(client, bufnr, installed_server)
@@ -27,16 +35,6 @@ return {
         { desc = 'nvim-lspconfig - Press g + h to hover', buffer = bufnr })
       vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename,
         { desc = 'nvim-lspconfig - Press "' .. vim.g.mapleader .. '" + r + n to rename', buffer = bufnr })
-      vim.keymap.set('n', '<Leader>F', vim.lsp.buf.formatting,
-        { desc = 'lsp-format.nvim - Press "' .. vim.g.mapleader .. '" + F to format file', buffer = bufnr })
-      vim.keymap.set("n", "ga", vim.lsp.buf.code_action,
-        { desc = 'lsp-format.nvim - Press g + a for code actions', buffer = bufnr })
-      vim.keymap.set('n', 'gl', vim.diagnostic.open_float,
-        { desc = 'nvim-lspconfig - Press g + l to open diagnostic', buffer = bufnr })
-      vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next,
-        { desc = 'nvim-lspconfig - Press ctrl + n to go to next diagnostic', buffer = bufnr })
-      vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev,
-        { desc = 'nvim-lspconfig - Press ctrl + p to go to previous diagnostic', buffer = bufnr })
     end,
     capabilities = function()
       return require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -59,10 +57,10 @@ return {
         init_options = { documentFormatting = true },
         settings = {
           Lua = (function()
-            if installed_server == 'sumneko_lua' then
+            if installed_server == 'lua_ls' then
               return {
                 diagnostics = {
-                  globals = { 'vim', 'packer_lazy' }
+                  globals = { 'vim' }
                 }
               }
             end

@@ -1,6 +1,7 @@
 return {
   -- open buffer tab style
   'akinsho/bufferline.nvim',
+  event = "VeryLazy",
   dependencies = {
     'kyazdani42/nvim-web-devicons' -- file icons
   },
