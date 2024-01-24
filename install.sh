@@ -31,7 +31,9 @@ chsh -s "$(command -v zsh)"
 
 wget -NP ~/.local/share/fonts/ 'https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf'
 curl -o- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-. $NVM_DIR/nvm.sh
+
+exec /bin/zsh
+
 nvm install node
 
 if [ "${PWD##*/}" != "dotfiles" ]; then
