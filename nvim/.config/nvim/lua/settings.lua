@@ -33,14 +33,14 @@ vim.filetype.add({
   }
 })
 
-vim.lsp.set_log_level("debug")
+vim.lsp.set_log_level("info")
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'genbasic',
   callback = function()
     vim.lsp.start({
-      name = 'genbasic-ls',
-      cmd = { 'node', '/home/leo/dev/genbasic-ls/server/out/server.js', '--stdio' },
+      name = 'genbasic-language-server',
+      cmd = { 'genbasic-language-server', '--stdio' },
       root_dir = vim.fn.getcwd()
     })
     local bufnr = vim.api.nvim_get_current_buf()
