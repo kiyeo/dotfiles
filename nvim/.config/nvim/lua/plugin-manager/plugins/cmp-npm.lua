@@ -1,3 +1,4 @@
 return {
-  'David-Kunz/cmp-npm'
+  'David-Kunz/cmp-npm',
+  opts = {}
 }
