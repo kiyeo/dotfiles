@@ -7,3 +7,12 @@
 	helper = /usr/local/bin/git-credential-manager
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+[core]
+	safecrlf = false
+	autocrlf = false
+	whitespace = cr-at-eol
+	eol = lf
+[submodule]
+	recurse = true
+[init]
+	defaultBranch = main

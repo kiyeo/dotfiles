@@ -1,5 +1,5 @@
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 local jdtls_path = vim.fn.stdpath("data") .. "/mason/packages/jdtls"
 -- If you started neovim within `~/dev/xy/project-1` this would resolve to `project-1`
