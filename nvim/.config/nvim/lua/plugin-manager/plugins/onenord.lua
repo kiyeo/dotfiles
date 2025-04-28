@@ -28,7 +28,7 @@ return {
         BufferLineFill = { fg = "#ECEFF4", bg = "#242932" },
         GitSignsChange = { fg = '#d08770' },
         GitSignsChangeNr = { fg = '#d08770' },
-        GitSignsChangeLn = { fg = '#d08770' }
+        GitSignsChangeLn = { fg = '#d08770' },
       },
       -- transparency
       disable = {
