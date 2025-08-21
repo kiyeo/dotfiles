@@ -49,69 +49,90 @@ return {
     local installed_servers = mason_lspconfig.get_installed_servers()
 
     for _, installed_server in pairs(installed_servers) do
-      lspconfig[installed_server].setup({
-        on_attach = function(client, bufnr)
-          opts.on_attach(client, bufnr, installed_server)
-        end,
-        capabilities = opts.capabilities(),
-        init_options = { documentFormatting = true },
-        settings = {
-          Lua = (function()
-            if installed_server == 'lua_ls' then
-              return {
-                diagnostics = {
-                  globals = { 'vim' }
+      if installed_server == 'omnisharp' then
+        local pid = vim.fn.getpid()
+        lspconfig[installed_server].setup({
+          on_attach = function(client, bufnr)
+            opts.on_attach(client, bufnr, installed_server)
+          end,
+          capabilities = opts.capabilities(),
+          init_options = { documentFormatting = true },
+          cmd = {
+            vim.fn.stdpath('data') .. '/mason/bin/omnisharp',
+            '--languageserver',
+            '--hostPID',
+            tostring(pid)
+          },
+        })
+      else
+        lspconfig[installed_server].setup({
+          on_attach = function(client, bufnr)
+            opts.on_attach(client, bufnr, installed_server)
+          end,
+          capabilities = opts.capabilities(),
+          init_options = (function()
+            if installed_server ~= 'terraformls' then
+              return { documentFormatting = true }
+            end
+          end)(),
+          settings = {
+            Lua = (function()
+              if installed_server == 'lua_ls' then
+                return {
+                  diagnostics = {
+                    globals = { 'vim' }
+                  }
                 }
-              }
-            end
-          end)(),
-          yaml = (function()
-            if installed_server == 'yamlls' then
-              return {
-                format = {
-                  enable = true,
-                },
-                hover = true,
-                completion = true,
-                customTags = {
-                  "!Base64 scalar",
-                  "!Cidr scalar",
-                  "!And sequence",
-                  "!Equals sequence",
-                  "!If sequence",
-                  "!Not sequence",
-                  "!Or sequence",
-                  "!Condition scalar",
-                  "!FindInMap sequence",
-                  "!GetAtt scalar",
-                  "!GetAZs scalar",
-                  "!ImportValue scalar",
-                  "!Join sequence",
-                  "!Select sequence",
-                  "!Split sequence",
-                  "!Sub scalar",
-                  "!Transform mapping",
-                  "!Ref scalar",
-                },
-              }
-            end
-          end)(),
-          java = (function()
-            if installed_server == 'jdtls' then
-              return {
-                configuration = {
-                  runtimes = {
-                    {
-                      name = "JavaSE-17",
-                      path = "/usr/lib/jvm/java-17-openjdk-amd64/",
+              end
+            end)(),
+            yaml = (function()
+              if installed_server == 'yamlls' then
+                return {
+                  format = {
+                    enable = true,
+                  },
+                  hover = true,
+                  completion = true,
+                  customTags = {
+                    "!Base64 scalar",
+                    "!Cidr scalar",
+                    "!And sequence",
+                    "!Equals sequence",
+                    "!If sequence",
+                    "!Not sequence",
+                    "!Or sequence",
+                    "!Condition scalar",
+                    "!FindInMap sequence",
+                    "!GetAtt scalar",
+                    "!GetAZs scalar",
+                    "!ImportValue scalar",
+                    "!Join sequence",
+                    "!Select sequence",
+                    "!Split sequence",
+                    "!Sub scalar",
+                    "!Transform mapping",
+                    "!Ref scalar",
+                  },
+                }
+              end
+            end)(),
+            java = (function()
+              if installed_server == 'jdtls' then
+                return {
+                  configuration = {
+                    runtimes = {
+                      {
+                        name = "JavaSE-17",
+                        path = "/usr/lib/jvm/java-17-openjdk-amd64/",
+                      }
                     }
                   }
                 }
-              }
-            end
-          end)()
-        }
-      })
+              end
+            end)()
+          }
+        })
+      end
     end
   end
 }
