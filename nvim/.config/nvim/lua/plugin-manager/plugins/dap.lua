@@ -27,6 +27,91 @@ return {
                 port = 5005,
               })
             end
+            if user_input == 'perl' then
+              dap.run({
+                type = 'perl',
+                request = 'launch',
+                name = 'Launch Perl',
+                cwd = '${workspaceFolder}',
+                program = function()
+                  return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/' .. vim.fn.expand('%'), 'file')
+                end,
+                -- Add other configuration options as required by your specific perl-debug-adapter
+                -- e.g., 'args', 'cwd', 'env'
+              })
+            end
+            if user_input == 'lua' then
+              dap.run({
+                type = "lua-local",
+                request = "launch",
+                name = "Debug",
+                cwd = '${workspaceFolder}',
+                program = {
+                  lua = "lua",
+                  file = function()
+                    return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/' .. vim.fn.expand('%'), 'file')
+                  end,
+
+                }
+              })
+            end
+            if user_input == 'cpp' or user_input == 'c++' or user_input == 'cppdbg' then
+              dap.run({
+                name = 'Attach to gdbserver :10000',
+                type = 'cppdbg',
+                request = 'launch',
+                MIMode = 'gdb',
+                miDebuggerServerAddress = 'localhost:10000',
+                miDebuggerPath = '/usr/bin/gdb',
+                cwd = '${workspaceFolder}',
+                setupCommands = {
+                  {
+                    description = "Enable pretty-printing for gdb",
+                    text = "-enable-pretty-printing",
+                    ignoreFailures = true,
+                  },
+                  {
+                    description = "Set follow-fork-mode to child",
+                    text = "set follow-fork-mode child",
+                    ignoreFailures = false,
+                  }
+                },
+                program = function()
+                  return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/' .. vim.fn.expand('%'), 'file')
+                end,
+                sourceFileMap = {
+                  -- "remote": "local"
+                  ['/btmp/geninstall/genplusdev/h/source/'] = vim.fn.getcwd(),
+                  ['/home/geninstall/source'] = vim.fn.getcwd()
+                }
+              })
+              return
+            end
+            if current_file == string.match(current_file, '^.*%.cs$') or user_input == 'cs' or user_input == 'c#' or user_input == 'coreclr' or user_input == 'netcoredbg' then
+              local dll_path = vim.fn.expand('%:h') .. '/bin/Debug/net8.0/' .. vim.fn.expand('%:h:t') .. '.dll'
+              local current_test_file = string.match(current_file, '(.*).cs$');
+              local test_method = string.match(vim.api.nvim_get_current_line(), '.*%s(.*)%(.*%)');
+              require('toggleterm.terminal').Terminal:new({
+                cmd = 'VSTEST_HOST_DEBUG=1 dotnet test ' ..
+                    dll_path .. ' --filter ' .. current_test_file .. '.' .. test_method,
+                hidden = false,
+                close_on_exit = false,
+                on_stdout = function(_, _, stdoutTable)
+                  for _, value in pairs(stdoutTable) do
+                    local processId = string.match(value, "Process Id%p%s(%d+)")
+                    if processId ~= nil then
+                      dap.run({
+                        type = "coreclr",
+                        name = "launch - netcoredbg",
+                        request = "attach",
+                        processId = processId,
+                      })
+                    end
+                  end
+                end
+              }):spawn()
+              return
+            end
             local npm_7 = '--node-options=--inspect'
             local npm_6 = '--node-arg=--inspect'
             type = 'node2'
@@ -243,5 +328,96 @@ return {
         port = 5005,
       })
     end
+    dap.adapters.cppdbg = {
+      id = 'cppdbg',
+      type = 'executable',
+      command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7',
+    }
+    dap.configurations.cpp = {
+      {
+        name = "Launch file",
+        type = "cppdbg",
+        request = "launch",
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopAtEntry = true,
+      },
+      {
+        name = 'Attach to gdbserver :10000',
+        type = 'cppdbg',
+        request = 'launch',
+        MIMode = 'gdb',
+        miDebuggerServerAddress = 'localhost:10000',
+        miDebuggerPath = '/usr/bin/gdb',
+        cwd = '${workspaceFolder}',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+      },
+      {
+        name = "Attach to Docker",
+        type = "cppdbg",
+        request = "attach",
+        MIMode = "gdb",
+        processId = function()
+          -- Find the process ID inside the container
+          local output = vim.fn.system("docker exec <container_name> pidof <program_name>")
+          return tonumber(output:match("%d+"))
+        end,
+        remote = {
+          address = "localhost:10000",
+          protocol = "tcp",
+        },
+        sourceLanguages = { "cpp" },
+      }
+    }
+
+    dap.adapters.coreclr = {
+      type = 'executable',
+      command = vim.fn.stdpath('data') .. '/mason/bin/netcoredbg',
+      args = { '--interpreter=vscode' }
+    }
+    dap.configurations.cs = {
+      {
+        type = "coreclr",
+        name = "launch - netcoredbg",
+        request = "launch",
+        program = function()
+          local dll_path = vim.fn.expand('%:h') .. '/bin/Debug/net8.0/' .. vim.fn.expand('%:h:t') .. '.dll'
+          return vim.fn.input('Path to dll: ',
+            dll_path,
+            'file')
+        end,
+        cwd = '${workspaceFolder}',
+        console = 'integratedTerminal',
+        options = { detached = false }
+      },
+      {
+        type = "coreclr",
+        name = "attach - netcoredbg",
+        request = "attach",
+        processId = function()
+          return vim.fn.input('Process Id: ')
+        end
+      },
+    }
+
+    dap.adapters.perl = {
+      type = 'executable',
+      command = vim.fn.stdpath('data') .. '/mason/bin/perl-debug-adapter',
+      args = {}
+    }
+    dap.configurations.perl = {
+        {
+            type = 'perl', -- This should match the 'type' defined by your perl-debug-adapter
+            request = 'launch',
+            name = 'Launch file',
+            program = '${file}',
+            -- Add other configuration options as required by your specific perl-debug-adapter
+            -- e.g., 'args', 'cwd', 'env'
+        },
+    }
   end
 }

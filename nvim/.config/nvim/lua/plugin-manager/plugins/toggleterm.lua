@@ -25,7 +25,7 @@ return {
         end
         vim.ui.input({ prompt = 'Enter terminal number (A/a/[0-9]+): ' },
           function(user_input)
-            if user_input == nil or user_input == 'A' or user_input == 'a' then
+            if user_input == '' or user_input == nil or user_input == 'A' or user_input == 'a' then
               toggleterm.toggle_all()
             elseif tonumber(user_input) then
               toggleterm.toggle(tonumber(user_input))
