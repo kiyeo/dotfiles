@@ -18,6 +18,7 @@ return {
       'latex',
       'lua',
       'markdown',
+      'markdown_inline',
       'rust',
       'toml',
       'typescript',

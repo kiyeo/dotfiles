@@ -410,14 +410,14 @@ return {
       args = {}
     }
     dap.configurations.perl = {
-        {
-            type = 'perl', -- This should match the 'type' defined by your perl-debug-adapter
-            request = 'launch',
-            name = 'Launch file',
-            program = '${file}',
-            -- Add other configuration options as required by your specific perl-debug-adapter
-            -- e.g., 'args', 'cwd', 'env'
-        },
+      {
+        type = 'perl',     -- This should match the 'type' defined by your perl-debug-adapter
+        request = 'launch',
+        name = 'Launch file',
+        program = '${file}',
+        -- Add other configuration options as required by your specific perl-debug-adapter
+        -- e.g., 'args', 'cwd', 'env'
+      },
     }
   end
 }
