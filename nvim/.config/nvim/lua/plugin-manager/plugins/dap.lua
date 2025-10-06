@@ -70,11 +70,11 @@ return {
                     text = "-enable-pretty-printing",
                     ignoreFailures = true,
                   },
-                  {
-                    description = "Set follow-fork-mode to child",
-                    text = "set follow-fork-mode child",
-                    ignoreFailures = false,
-                  }
+                  --{
+                  --  description = "Set follow-fork-mode to child",
+                  --  text = "set follow-fork-mode child",
+                  --  ignoreFailures = false,
+                  --}
                 },
                 program = function()
                   return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/' .. vim.fn.expand('%'), 'file')
