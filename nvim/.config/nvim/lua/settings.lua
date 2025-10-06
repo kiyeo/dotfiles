@@ -59,8 +59,8 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 
-vim.api.nvim_create_autocmd("LspTokenUpdate", {
-  callback = function(args)
-    print(vim.inspect(args))
-  end,
-})
+--vim.api.nvim_create_autocmd("LspTokenUpdate", {
+--  callback = function(args)
+--    print(vim.inspect(args))
+--  end,
+--})
