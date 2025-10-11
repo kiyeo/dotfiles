@@ -20,4 +20,4 @@ vim.keymap.set('n', '<Leader>w', '<C-o>:bd #<CR>', { desc = 'Press "' .. vim.g.m
 vim.keymap.set('t', '<A-w>', '<C-\\><C-n>:bdelete!<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + w to exit terminal mode and delete the buffer' })
 vim.keymap.set('n', '<Leader>e', ':Lexplore 30<CR>', { desc = 'Press "' .. vim.g.mapleader .. '" + e to open Netrw' })
 
-vim.keymap.set({ 'n', 'x' }, '<Leader>ll', 'v$h', { desc = 'Press "' .. vim.g.mapleader .. '" + e + l to select till the end of the line' })
+vim.keymap.set({ 'n', 'x' }, '<Leader>ll', 'v$h', { desc = 'Press "' .. vim.g.mapleader .. '" + l + l to select till the end of the line' })

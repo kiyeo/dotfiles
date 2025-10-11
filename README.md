@@ -8,7 +8,7 @@
 
 ![preview](./.preview.png)
 
-`Warning: Don’t blindly use my settings unless you know what that entails. Use at your own risk!`
+`WARNING: Don’t blindly use my settings unless you know what that entails. Use at your own risk!`
 
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/kiyeo/dotfiles/main/install.sh)"

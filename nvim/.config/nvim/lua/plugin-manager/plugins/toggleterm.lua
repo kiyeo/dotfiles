@@ -6,8 +6,9 @@ return {
       print("toggleterm not found")
       return
     end
+    local size = 80;
     toggleterm.setup({
-      size = 80,
+      size,
       --open_mapping = function()
       shade_terminals = false,
       direction = 'vertical',
@@ -15,9 +16,9 @@ return {
       on_open = function() vim.cmd("startinsert!") end,
     })
 
-    vim.keymap.set({ 'n', 't' }, '<C-q>', '<C-\\><C-n>:ToggleTerm<CR>',
-      { desc = 'toggleterm - Press Ctrl + q to toggle terminal' })
-    vim.keymap.set({ 'n', 't' }, '<C-t>s',
+    vim.keymap.set({ 'n', 't' }, '<Leader>tt', '<C-\\><C-n>:ToggleTerm size=' .. size .. '<CR>',
+      { desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + t to toggle terminal' })
+    vim.keymap.set({ 'n', 't' }, '<Leader>ta',
       function()
         if #require('toggleterm.terminal').get_all() == 0 then
           toggleterm.toggle(1)
@@ -33,6 +34,6 @@ return {
           end
         )
       end,
-      { desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + s to be prompted to select terminal' })
+      { desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + a to be prompted to select terminal' })
   end
 }
