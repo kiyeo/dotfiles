@@ -1,6 +1,12 @@
 return {
-  "williamboman/mason.nvim", -- manage LSP servers, DAP servers, linters, and formatters
-  cmd = "Mason",
-  build = ":MasonUpdate",
-  config = true,
+  'mason-org/mason.nvim',
+  opts = {
+    ui = {
+      icons = {
+        package_installed = '✓',
+        package_pending = '➜',
+        package_uninstalled = '✗'
+      }
+    }
+  }
 }

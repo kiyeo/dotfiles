@@ -2,11 +2,14 @@ return {
   'norcalli/nvim-colorizer.lua', -- color highlighter
   config = function()
     local is_colorizer, colorizer = pcall(require, 'colorizer')
-    if is_colorizer then
-      colorizer.setup({ '*' }, {
-        RRGGBBAA = true,
-        css = true,
-      })
+    if not (is_colorizer) then
+      print('colorizer is not installed')
+      return
     end
+
+    colorizer.setup({ '*' }, {
+      RRGGBBAA = true,
+      css = true,
+    })
   end
 }

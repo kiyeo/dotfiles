@@ -5,8 +5,8 @@ return {
     'kyazdani42/nvim-web-devicons' -- file icons
   },
   keys = {
-    { '<Leader>e',  ':NvimTreeToggle <CR>',  desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "' .. vim.g.mapleader .. '" to fuzzy find files' },
-    { '<Leader>fe', ':NvimTreeFindFile<CR>', desc = 'telescope.nvim - Press "' .. vim.g.mapleader .. '" "' .. vim.g.mapleader .. '" to fuzzy find files' }
+    { '<Leader>e',  ':NvimTreeToggle <CR>',  desc = 'nvim-tree - Press "' .. vim.g.mapleader .. '" + e to open file explorer' },
+    { '<Leader>fe', ':NvimTreeFindFile<CR>', desc = 'nvim-tree - Press "' .. vim.g.mapleader .. '" + f + e to find file in the file explorer' }
   },
   opts = {
     disable_netrw = true,
