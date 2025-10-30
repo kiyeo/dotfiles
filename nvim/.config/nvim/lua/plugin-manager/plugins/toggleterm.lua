@@ -3,7 +3,7 @@ return {
   config = function()
     local is_toggleterm, toggleterm = pcall(require, 'toggleterm')
     if not (is_toggleterm) then
-      print("toggleterm not found")
+      print('toggleterm is not installed')
       return
     end
     local size = 80;

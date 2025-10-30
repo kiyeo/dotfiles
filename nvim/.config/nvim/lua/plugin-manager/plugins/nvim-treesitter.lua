@@ -22,7 +22,8 @@ return {
       'toml',
       'typescript',
       'yaml',
-      'java'
+      'java',
+      'c_sharp'
     },
     highlight = {
       enable = true

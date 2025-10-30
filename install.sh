@@ -34,6 +34,8 @@ display_help() {
 is_install_font=true
 is_install_nvm=true
 is_install_tex=false
+tex_apt_packages=" latexmk texlive-xetex fonts-linuxlibertine"
+tex_brew_packages=" mactex font-linux-libertine"
 texpresso_apt_packages=" build-essential libsdl2-dev libmupdf-dev libmujs-dev libfreetype-dev  libgumbo-dev libjbig2dec0-dev libjpeg-dev libopenjp2-7-dev cargo libssl-dev libfontconfig-dev libleptonica-dev libharfbuzz-dev"
 texpresso_brew_packages=" rust mupdf-tools SDL2"
 
@@ -79,6 +81,7 @@ case "$os_type" in
     case "$distributor_id" in
       Ubuntu)
         if [ "$is_install_tex" = true ]; then
+          apt_packages+=${tex_apt_packages}
           apt_packages+=${texpresso_apt_packages}
         fi
         sudo apt-get update
@@ -93,6 +96,7 @@ case "$os_type" in
     ;;
   Darwin*)
     if [ "$is_install_tex" = true ]; then
+      brew_packages+=${tex_brew_packages}
       brew_packages+=${texpresso_brew_packages}
     fi
     brew install ${brew_packages}

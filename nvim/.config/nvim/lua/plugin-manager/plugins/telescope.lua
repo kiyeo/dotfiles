@@ -2,7 +2,7 @@ return {
   -- fuzzy finder
   'nvim-telescope/telescope.nvim',
   dependencies = {
-    "nvim-lua/plenary.nvim",
+    'nvim-lua/plenary.nvim',
   },
   opts = {
     pickers = {

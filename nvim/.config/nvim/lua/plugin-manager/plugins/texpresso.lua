@@ -7,6 +7,8 @@ return {
       return
     end
 
+    texpresso.texpresso_path = '/home/leo/texpresso/build/texpresso'
+
     vim.api.nvim_create_user_command('TeXpressoSync',
       function()
         local buf = 0

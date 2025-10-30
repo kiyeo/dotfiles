@@ -1,6 +1,6 @@
 return {
   'lewis6991/gitsigns.nvim', -- git decoration and actions
-  event = { "BufReadPre", "BufNewFile" },
+  event = { 'BufReadPre', 'BufNewFile' },
   opts = {
     signs = {
       add = { text = '▎' },
@@ -9,13 +9,13 @@ return {
     },
     numhl = true,
     on_attach = function(buffer)
-      vim.keymap.set('n', '[c', "&diff ? '[c' : ':Gitsigns next_hunk<CR>'",
+      vim.keymap.set('n', '[c', '&diff ? "[c" : ":Gitsigns next_hunk<CR>"',
         {
           buffer = buffer,
           expr = true,
           desc = 'gitsigns.nvim - Press [ + c to go to next hunk git changes'
         })
-      vim.keymap.set('n', ']c', "&diff ? ']c' : ':Gitsigns prev_hunk<CR>'",
+      vim.keymap.set('n', ']c', '&diff ? "]c" : ":Gitsigns prev_hunk<CR>"',
         {
 
           buffer = buffer,

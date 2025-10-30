@@ -229,11 +229,17 @@ return {
   },
   config = function(_, opts)
     local is_dap, dap = pcall(require, 'dap')
+    if not is_dap then
+      print('dap is not installed')
+      return
+    end
     local is_nvim_dap_virtual_text, nvim_dap_virtual_text = pcall(require, 'nvim-dap-virtual-text')
-    if is_dap then
-      if is_nvim_dap_virtual_text then
-        nvim_dap_virtual_text.setup()
-      end
+    if not is_nvim_dap_virtual_text then
+      print('nvim-dap-virtual-text is not installed')
+      return
+    end
+    if is_dap and is_nvim_dap_virtual_text then
+      nvim_dap_virtual_text.setup()
     end
 
     opts.mappings()
@@ -410,14 +416,14 @@ return {
       args = {}
     }
     dap.configurations.perl = {
-        {
-            type = 'perl', -- This should match the 'type' defined by your perl-debug-adapter
-            request = 'launch',
-            name = 'Launch file',
-            program = '${file}',
-            -- Add other configuration options as required by your specific perl-debug-adapter
-            -- e.g., 'args', 'cwd', 'env'
-        },
+      {
+        type = 'perl',     -- This should match the 'type' defined by your perl-debug-adapter
+        request = 'launch',
+        name = 'Launch file',
+        program = '${file}',
+        -- Add other configuration options as required by your specific perl-debug-adapter
+        -- e.g., 'args', 'cwd', 'env'
+      },
     }
   end
 }
