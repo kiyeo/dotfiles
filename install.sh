@@ -35,6 +35,7 @@ is_install_font=true
 is_darwin_font=false
 is_install_nvm=true
 is_install_tex=false
+is_install_neovim=true
 tex_apt_packages=" latexmk texlive-xetex fonts-linuxlibertine"
 tex_brew_packages=" mactex font-linux-libertine"
 texpresso_apt_packages=" build-essential libsdl2-dev libmupdf-dev libmujs-dev libfreetype-dev  libgumbo-dev libjbig2dec0-dev libjpeg-dev libopenjp2-7-dev cargo libssl-dev libfontconfig-dev libleptonica-dev libharfbuzz-dev"
@@ -73,14 +74,14 @@ set -e
 os_type="$(uname -s)"
 
 emerge_packages="x11-misc/picom x11-apps/xsetroot x11-misc/xclip media-gfx/feh media-plugins/alsa-plugins media-sound/alsa-utils app-shells/zsh dev-vcs/git app-admin/stow app-editors/neovim sys-apps/ripgrep app-shells/zoxide sys-process/htop app-misc/neofetch"
-apt_packages="git zsh stow neovim ripgrep zoxide gcc"
-brew_packages="git zsh stow neovim ripgrep zoxide gcc"
+apt_packages="git zsh stow ripgrep zoxide gcc"
+brew_packages="git zsh stow ripgrep zoxide gcc"
 
 case "$os_type" in
   Linux*)
     distributor_id="$(lsb_release --short --id)"
     case "$distributor_id" in
-      Ubuntu)
+      Ubuntu | Pop)
         if [ "$is_install_tex" = true ]; then
           apt_packages+=${tex_apt_packages}
           apt_packages+=${texpresso_apt_packages}
@@ -127,6 +128,13 @@ if [ "$is_install_tex" = true ]; then
   fi
   make -C /tmp/texpresso &&
     cp -r /tmp/texpresso/build "$HOME/.local/bin"
+fi
+
+if [ "$is_install_neovim" = true ]; then
+  wget -NP /tmp 'https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage'
+  chmod u+x /tmp/nvim-linux-x86_64.appimage
+  sudo cp /tmp/nvim-linux-x86_64.appimage /usr/local/lib/nvim
+  sudo mv /tmp/nvim-linux-x86_64.appimage /usr/local/bin/nvim
 fi
 
 if [ "${PWD##*/}" != "dotfiles" ]; then
