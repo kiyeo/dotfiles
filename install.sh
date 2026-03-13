@@ -81,7 +81,7 @@ case "$os_type" in
   Linux*)
     distributor_id="$(lsb_release --short --id)"
     case "$distributor_id" in
-      Ubuntu | Pop)
+      Ubuntu | Pop | Debian)
         if [ "$is_install_tex" = true ]; then
           apt_packages+=${tex_apt_packages}
           apt_packages+=${texpresso_apt_packages}
@@ -131,10 +131,14 @@ if [ "$is_install_tex" = true ]; then
 fi
 
 if [ "$is_install_neovim" = true ]; then
-  wget -NP /tmp 'https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.appimage'
-  chmod u+x /tmp/nvim-linux-x86_64.appimage
-  sudo cp /tmp/nvim-linux-x86_64.appimage /usr/local/lib/nvim
-  sudo mv /tmp/nvim-linux-x86_64.appimage /usr/local/bin/nvim
+  if [ $(uname -a) = 'x86_64' ]; then
+    wget -N /tmp 'https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-x86_64.appimage' -O /tmp/nvim-linux.appimage
+  else
+    wget -N /tmp 'https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-arm64.appimage' -O /tmp/nvim-linux.appimage
+  fi
+  chmod u+x /tmp/nvim-linux.appimage
+  sudo cp /tmp/nvim-linux.appimage /usr/local/lib/nvim
+  sudo mv /tmp/nvim-linux.appimage /usr/local/bin/nvim
 fi
 
 if [ "${PWD##*/}" != "dotfiles" ]; then
