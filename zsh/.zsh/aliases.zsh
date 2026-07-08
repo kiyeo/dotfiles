@@ -17,3 +17,5 @@ alias py2='python2'
 alias py3='python3'
 
 alias awsume='. awsume'
+alias kiro='kiro-cli'
+alias k='kiro-cli'

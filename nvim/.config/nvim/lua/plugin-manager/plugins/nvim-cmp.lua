@@ -151,12 +151,5 @@ return {
       }),
       matching = { disallow_symbol_nonprefix_matching = false, disallow_fullfuzzy_matching = false, disallow_fuzzy_matching = false, disallow_partial_matching = false, disallow_partial_fuzzy_matching = true, disallow_prefix_unmatching = false }
     })
-    cmp.setup.filetype('tex', {
-      sources = {
-        { name = 'vimtex' },
-        { name = 'luasnip' },
-        { name = 'buffer' },
-      },
-    })
   end
 }

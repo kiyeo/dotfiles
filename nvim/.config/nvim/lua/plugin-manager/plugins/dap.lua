@@ -106,6 +106,8 @@ return {
                         request = "attach",
                         processId = processId,
                       })
+                      print('VSTEST_HOST_DEBUG=1 dotnet test ' ..
+                        dll_path .. ' --filter ' .. current_test_file .. '.' .. test_method)
                     end
                   end
                 end
@@ -380,6 +382,34 @@ return {
       }
     }
 
+    local function pick_process()
+      local output
+      vim.ui.input({ prompt = 'Enter filter for grep: ' },
+        function(user_input)
+          if user_input == '' or user_input == nil then
+            output = vim.fn.systemlist("ps aux")
+          elseif user_input then
+            output = vim.fn.systemlist("ps aux | grep " .. user_input)
+          end
+        end
+      )
+      local items = {}
+      for i = 2, #output do -- skip header line
+        local pid = output[i]:match("^%S+%s+(%d+)")
+        if pid then
+          table.insert(items, { pid = tonumber(pid), line = output[i] })
+        end
+      end
+      local co = coroutine.running()
+      vim.ui.select(items, {
+        prompt = "Select process",
+        format_item = function(item) return item.line end,
+      }, function(choice)
+        coroutine.resume(co, choice and choice.pid)
+      end)
+      return coroutine.yield()
+    end
+
     dap.adapters.coreclr = {
       type = 'executable',
       command = vim.fn.stdpath('data') .. '/mason/bin/netcoredbg',
@@ -408,6 +438,36 @@ return {
           return vim.fn.input('Process Id: ')
         end
       },
+      {
+        name = "Attach PDE C#",
+        type = "coreclr",
+        request = "attach",
+        processId = pick_process,
+        justMyCode = false,
+        suppressJITOptimizations = true,
+        enableStepFiltering = false,
+        logging = {
+          moduleLoad = false,
+        },
+        requireExactSource = false,
+        pipeTransport = {
+          pipeCwd = vim.fn.getcwd(),
+          pipeProgram = "/usr/bin/docker",
+          pipeArgs = {
+            "exec",
+            "--user",
+            "gen_main",
+            "-i",
+            "popokatea-csharp-velocity-1",
+          },
+          debuggerPath = "/vsdbg/vsdbg",
+          quoteArgs = false,
+        },
+        sourceFileMap = {
+          ["/gencore/genplus/bin"] = vim.fn.getcwd() .. "/cssrc/Gentrack.Velocity.Core/transpiled",
+        },
+      }
+
     }
 
     dap.adapters.perl = {
@@ -417,7 +477,7 @@ return {
     }
     dap.configurations.perl = {
       {
-        type = 'perl',     -- This should match the 'type' defined by your perl-debug-adapter
+        type = 'perl', -- This should match the 'type' defined by your perl-debug-adapter
         request = 'launch',
         name = 'Launch file',
         program = '${file}',
@@ -425,5 +485,39 @@ return {
         -- e.g., 'args', 'cwd', 'env'
       },
     }
+
+    -- Define the bashdb adapter
+    dap.adapters.bashdb = {
+      type = "executable",
+      command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
+      name = "bashdb",
+    }
+
+    -- Define the configuration for .sh and .bash files
+    dap.configurations.sh = {
+      {
+        type = "bashdb",
+        request = "launch",
+        name = "Launch file",
+        showDebugOutput = true,
+        pathBashdb = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
+        pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
+        trace = true,
+        file = "${file}",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+        pathCat = "cat",
+        pathBash = "/bin/bash",
+        pathMkfifo = "mkfifo",
+        pathPkill = "pkill",
+        args = {},
+        -- Required for handling script arguments correctly with the adapter
+        argsString = '',
+        env = {},
+        terminalKind = "integrated", -- Use Neovim's integrated terminal
+      },
+    }
+
+    dap.configurations.bash = dap.configurations.sh
   end
 }

@@ -1,3 +1,6 @@
 require('settings')
 require('mappings')
-require('plugin-manager')
+if vim.g.vscode then
+else
+  require('plugin-manager')
+end

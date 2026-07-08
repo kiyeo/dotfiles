@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
+
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/.local/share/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/kiro-cli/shell/zshrc.pre.zsh"
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
@@ -166,3 +167,11 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Trust Netskope inspection CA for Node/npm (TLS interception fix)
 export NODE_EXTRA_CA_CERTS="$HOME/.certs/netskope-ca.pem"
+
+# pnpm
+export PNPM_HOME="/home/leo/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
