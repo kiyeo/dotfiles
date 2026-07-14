@@ -29,9 +29,10 @@ function git_branch_name()
 {
   local branch="$(git symbolic-ref HEAD 2> /dev/null | awk -F "/" '{print $NF}')"
   if [[ ! -z "$branch" ]]; then
-    local current_branch="$(git branch --list master main | sed 's/.*\(master\|main\)/\1/')"
+    local current_branch="$(git branch --list master main | awk '{print $NF}')"
+    local current_head="$(git branch --show-current)"
     if [[ "$(git name-rev @{u} 2> /dev/null)" ]]; then
-      local head_commit_status="$(git rev-list --left-right --count  origin/"$current_branch"...origin/"$(git branch --show-current)" | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')"
+      local head_commit_status=$(git rev-list --left-right --count origin/$(git branch --list master main | awk '{print $NF}')...HEAD 2>/dev/null | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')
     else
       local head_commit_status="%F{#e36154}%F{#00afff}"
     fi
@@ -157,3 +158,6 @@ export NVM_DIR="$HOME/.nvm"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Trust Netskope inspection CA for Node/npm (TLS interception fix)
+export NODE_EXTRA_CA_CERTS="$HOME/.certs/netskope-ca.pem"

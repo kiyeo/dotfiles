@@ -32,6 +32,7 @@ display_help() {
 }
 
 is_install_font=true
+is_darwin_font=false
 is_install_nvm=true
 is_install_tex=false
 tex_apt_packages=" latexmk texlive-xetex fonts-linuxlibertine"
@@ -95,6 +96,7 @@ case "$os_type" in
     esac
     ;;
   Darwin*)
+    is_darwin_font=true
     if [ "$is_install_tex" = true ]; then
       brew_packages+=${tex_brew_packages}
       brew_packages+=${texpresso_brew_packages}
@@ -104,7 +106,11 @@ case "$os_type" in
 esac
 
 if [ "$is_install_font" = true ]; then
-  wget -NP ~/.local/share/fonts/ 'https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf'
+  os_dir="$HOME/.local/share/fonts/"
+  if [ "$is_darwin_font" = true ]; then
+    os_dir="$HOME/Library/Fonts/"
+  fi
+  wget -NP "$os_dir" 'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf'
 fi
 
 if [ "$is_install_nvm" = true ]; then
@@ -120,7 +126,7 @@ if [ "$is_install_tex" = true ]; then
     git clone --recurse-submodules https://github.com/let-def/texpresso.git /tmp/texpresso
   fi
   make -C /tmp/texpresso &&
-    cp -r /tmp/texpresso/build ~/.local/bin
+    cp -r /tmp/texpresso/build "$HOME/.local/bin"
 fi
 
 if [ "${PWD##*/}" != "dotfiles" ]; then
