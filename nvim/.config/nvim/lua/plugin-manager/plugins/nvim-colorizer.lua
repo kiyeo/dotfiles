@@ -1,5 +1,5 @@
 return {
-  'norcalli/nvim-colorizer.lua', -- color highlighter
+  'catgoose/nvim-colorizer.lua', -- color highlighter
   config = function()
     local is_colorizer, colorizer = pcall(require, 'colorizer')
     if not (is_colorizer) then

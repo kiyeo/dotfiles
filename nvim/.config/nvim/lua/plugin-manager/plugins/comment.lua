@@ -22,11 +22,17 @@ return {
     end
   },
   config = function()
+    require('ts_context_commentstring').setup {
+      enable_autocmd = false,
+    }
+
     local is_comment, comment = pcall(require, 'Comment')
     if not is_comment then
       print('comment is not installed')
       return
     end
-    comment.setup()
+    comment.setup({
+      pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+    })
   end
 }
