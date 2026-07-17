@@ -32,7 +32,7 @@ function git_branch_name()
     local current_branch="$(git branch --list master main | awk '{print $NF}')"
     local current_head="$(git branch --show-current)"
     if [[ "$(git name-rev @{u} 2> /dev/null)" ]]; then
-      local head_commit_status=$(git rev-list --left-right --count origin/$(git branch --list master main | awk '{print $NF}')...HEAD 2>/dev/null | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')
+      local head_commit_status=$(git rev-list --left-right --count origin/"$current_branch"...origin/"$current_head" 2>/dev/null | awk '{print "%F{#e36154}↓"$1"%F{#00afff} %F{#88bf6a}↑"$2"%F{#00afff}"}')
     else
       local head_commit_status="%F{#e36154}%F{#00afff}"
     fi
