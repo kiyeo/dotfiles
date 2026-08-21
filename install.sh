@@ -111,7 +111,7 @@ if [ "$is_install_font" = true ]; then
   if [ "$is_darwin_font" = true ]; then
     os_dir="$HOME/Library/Fonts/"
   fi
-  wget -NP "$os_dir" 'https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf'
+  wget -NP "$os_dir" 'https://github.com/ryanoasis/nerd-fonts/raw/refs/heads/master/patched-fonts/JetBrainsMono/Ligatures/JetBrainsMonoNerdFont-Regular.ttf'
 fi
 
 if [ "$is_install_nvm" = true ]; then
@@ -132,9 +132,9 @@ fi
 
 if [ "$is_install_neovim" = true ]; then
   if [ $(uname -a) = 'x86_64' ]; then
-    wget -N /tmp 'https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-x86_64.appimage' -O /tmp/nvim-linux.appimage
+    wget 'https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.appimage' -O /tmp/nvim-linux.appimage
   else
-    wget -N /tmp 'https://github.com/neovim/neovim/releases/download/v0.11.6/nvim-linux-arm64.appimage' -O /tmp/nvim-linux.appimage
+    wget 'https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-arm64.appimage' -O /tmp/nvim-linux.appimage
   fi
   chmod u+x /tmp/nvim-linux.appimage
   sudo cp /tmp/nvim-linux.appimage /usr/local/lib/nvim
