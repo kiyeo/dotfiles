@@ -131,7 +131,7 @@ if [ "$is_install_tex" = true ]; then
 fi
 
 if [ "$is_install_neovim" = true ]; then
-  if [ $(uname -a) = 'x86_64' ]; then
+  if [ $(uname -p) = 'x86_64' ]; then
     wget 'https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-x86_64.appimage' -O /tmp/nvim-linux.appimage
   else
     wget 'https://github.com/neovim/neovim/releases/download/v0.12.4/nvim-linux-arm64.appimage' -O /tmp/nvim-linux.appimage
