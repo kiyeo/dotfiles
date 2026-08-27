@@ -7,14 +7,14 @@ return {
       return
     end
     local size = 80;
-    toggleterm.setup({
-      size,
-      --open_mapping = function()
+    local config = {
+      size = size,
       shade_terminals = false,
       direction = 'vertical',
       start_in_insert = false,
       on_open = function() vim.cmd("startinsert!") end,
-    })
+    }
+    toggleterm.setup(config)
 
     vim.keymap.set({ 'n', 't' }, '<Leader>tt', '<C-\\><C-n>:ToggleTerm size=' .. size .. '<CR>',
       { desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + t to toggle terminal' })
@@ -35,5 +35,24 @@ return {
         )
       end,
       { desc = 'toggleterm - Press "' .. vim.g.mapleader .. '" + t + a to be prompted to select terminal' })
+    local opencode_tui = require('toggleterm.terminal').Terminal:new(vim.tbl_deep_extend("force", config, {
+      cmd = "~/.opencode/bin/opencode",
+      hidden = false,
+      close_on_exit = false,
+      on_open = function(term)
+        -- Enter terminal mode automatically
+        vim.cmd("startinsert!")
+
+        --local opts = { buffer = term.bufnr }
+        --vim.keymap.set('t', 'k', [[<A-C-y>]], opts)
+        --vim.keymap.set('t', 'j', [[<A-C-e>]], opts)
+        --vim.keymap.set('t', 'gg', [[<C-g>]], opts)
+        --vim.keymap.set('t', 'G', [[<A-C-g>]], opts)
+      end,
+    }))
+
+    vim.api.nvim_create_user_command("OpenCode", function()
+      opencode_tui:toggle()
+    end, {})
   end
 }

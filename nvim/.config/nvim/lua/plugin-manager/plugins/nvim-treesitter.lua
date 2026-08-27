@@ -20,12 +20,14 @@ return {
       'latex',
       'lua',
       'markdown',
+      'markdown_inline',
       'rust',
       'toml',
       'typescript',
       'yaml',
       'java',
-      'c_sharp'
+      'c_sharp',
+      'python'
     },
     highlight = {
       enable = true
